@@ -102,7 +102,22 @@
                 </configuration>   
            </plugin>   
         </plugins>
-        <finalName>${project.artifactId}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- 资源根目录排除各环境的配置，防止在生成目录中多余其它目录 -->
+                <excludes>
+                    <exclude>dev/*</exclude>
+                    <exclude>run/*</exclude>
+                    <exclude>uat/*</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/${profiles.active}</directory>
+            </resource>
+        </resources>
+
+        <finalName>${project.artifactId}-${project.version}-${profiles.active}</finalName>
     </build>
 
 </project>

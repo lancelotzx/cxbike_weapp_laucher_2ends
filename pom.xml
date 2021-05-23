@@ -234,6 +234,33 @@
 
     </dependencies>
 
+    <profiles>
+        <profile>
+            <!--执行打包命令时将使用此处的id进行定位-->
+            <id>dev</id>
+            <properties>
+                <!--此处为对应的环境放置配置文件的目录-->
+                <profiles.active>dev</profiles.active>
+            </properties>
+            <activation>
+                <!--此处将dev设置为默认环境-->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>uat</id>
+            <properties>
+                <profiles.active>uat</profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>run</id>
+            <properties>
+                <profiles.active>run</profiles.active>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
