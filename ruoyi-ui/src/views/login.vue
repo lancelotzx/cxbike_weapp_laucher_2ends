@@ -18,7 +18,7 @@
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
-      <el-form-item prop="code">
+      <!-- <el-form-item prop="code">
         <el-input
           v-model="loginForm.code"
           auto-complete="off"
@@ -33,7 +33,8 @@
         </div>
       </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
-      <el-form-item style="width:100%;">
+       -->
+       <el-form-item style="width:100%;">
         <el-button
           :loading="loading"
           size="medium"
@@ -67,9 +68,9 @@ export default {
       loginForm: {
         username: "admin",
         password: "admin123",
-        rememberMe: false,
-        code: "",
-        uuid: ""
+        //rememberMe: false,
+         code: "888888",
+        uuid: "1"
       },
       loginRules: {
         username: [
@@ -93,8 +94,8 @@ export default {
     }
   },
   created() {
-    this.getCode();
-    this.getCookie();
+   // this.getCode();
+   // this.getCookie();
   },
   methods: {
     getCode() {
@@ -117,7 +118,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;
-          if (this.loginForm.rememberMe) {
+          /* if (this.loginForm.rememberMe) {
             Cookies.set("username", this.loginForm.username, { expires: 30 });
             Cookies.set("password", encrypt(this.loginForm.password), { expires: 30 });
             Cookies.set('rememberMe', this.loginForm.rememberMe, { expires: 30 });
@@ -125,7 +126,7 @@ export default {
             Cookies.remove("username");
             Cookies.remove("password");
             Cookies.remove('rememberMe');
-          }
+          } */
           this.$store.dispatch("Login", this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
           }).catch(() => {
