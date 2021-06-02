@@ -74,7 +74,6 @@
 
     <el-table v-loading="loading" :data="spotList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="景区状态" align="center" prop="id" />
       <el-table-column label="景区名称" align="center" prop="name" />
       <el-table-column label="景区状态" :formatter="statusFormat" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -113,7 +112,11 @@
         </el-form-item>
         <el-form-item label="景区状态">
           <el-radio-group v-model="form.status">
-            <el-radio label="1">请选择字典生成</el-radio>
+            <el-radio
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-divider content-position="center">图标信息</el-divider>
