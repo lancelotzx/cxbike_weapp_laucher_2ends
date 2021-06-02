@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysSpotMapper">
+    
+    <resultMap type="SysSpot" id="SysSpotResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <resultMap id="SysSpotSysIconResult" type="SysSpot" extends="SysSpotResult">
+        <collection property="sysIconList" notNullColumn="sub_id" javaType="java.util.List" resultMap="SysIconResult" />
+    </resultMap>
+
+    <resultMap type="SysIcon" id="SysIconResult">
+        <result property="id"    column="sub_id"    />
+        <result property="spotId"    column="sub_spot_id"    />
+        <result property="name"    column="sub_name"    />
+        <result property="url"    column="sub_url"    />
+        <result property="type"    column="sub_type"    />
+        <result property="tags"    column="sub_tags"    />
+        <result property="appid"    column="sub_appid"    />
+    </resultMap>
+
+    <sql id="selectSysSpotVo">
+        select id, name, status from sys_spot
+    </sql>
+
+    <select id="selectSysSpotList" parameterType="SysSpot" resultMap="SysSpotResult">
+        <include refid="selectSysSpotVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysSpotById" parameterType="Long" resultMap="SysSpotSysIconResult">
+        select a.id, a.name, a.status,
+            b.id as sub_id, b.spot_id as sub_spot_id, b.name as sub_name, b.url as sub_url, b.type as sub_type, b.tags as sub_tags, b.appid as sub_appid
+        from sys_spot a
+        left join sys_icon b on b.spot_id = a.id
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertSysSpot" parameterType="SysSpot" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_spot
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="status != null and status != ''">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="status != null and status != ''">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysSpot" parameterType="SysSpot">
+        update sys_spot
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysSpotById" parameterType="Long">
+        delete from sys_spot where id = #{id}
+    </delete>
+
+    <delete id="deleteSysSpotByIds" parameterType="String">
+        delete from sys_spot where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteSysIconBySpotIds" parameterType="String">
+        delete from sys_icon where spot_id in 
+        <foreach item="spotId" collection="array" open="(" separator="," close=")">
+            #{spotId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteSysIconBySpotId" parameterType="Long">
+        delete from sys_icon where spot_id = #{spotId}
+    </delete>
+
+    <insert id="batchSysIcon">
+        insert into sys_icon( id, spot_id, name, url, type, tags, appid) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.spotId}, #{item.name}, #{item.url}, #{item.type}, #{item.tags}, #{item.appid})
+        </foreach>
+    </insert>
+</mapper>

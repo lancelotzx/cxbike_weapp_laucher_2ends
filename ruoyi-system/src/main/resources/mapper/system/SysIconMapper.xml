@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysIconMapper">
+    
+    <resultMap type="SysIcon" id="SysIconResult">
+        <result property="id"    column="id"    />
+        <result property="spotId"    column="spot_id"    />
+        <result property="name"    column="name"    />
+        <result property="url"    column="url"    />
+        <result property="type"    column="type"    />
+        <result property="tags"    column="tags"    />
+        <result property="appid"    column="appid"    />
+    </resultMap>
+
+    <sql id="selectSysIconVo">
+        select id, spot_id, name, url, type, tags, appid from sys_icon
+    </sql>
+
+    <select id="selectSysIconList" parameterType="SysIcon" resultMap="SysIconResult">
+        <include refid="selectSysIconVo"/>
+        <where>  
+            <if test="spotId != null "> and spot_id = #{spotId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="tags != null  and tags != ''"> and tags = #{tags}</if>
+            <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysIconById" parameterType="Long" resultMap="SysIconResult">
+        <include refid="selectSysIconVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysIcon" parameterType="SysIcon" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_icon
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="spotId != null">spot_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="url != null">url,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="tags != null">tags,</if>
+            <if test="appid != null">appid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="spotId != null">#{spotId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="url != null">#{url},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="tags != null">#{tags},</if>
+            <if test="appid != null">#{appid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysIcon" parameterType="SysIcon">
+        update sys_icon
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="spotId != null">spot_id = #{spotId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="tags != null">tags = #{tags},</if>
+            <if test="appid != null">appid = #{appid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysIconById" parameterType="Long">
+        delete from sys_icon where id = #{id}
+    </delete>
+
+    <delete id="deleteSysIconByIds" parameterType="String">
+        delete from sys_icon where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
