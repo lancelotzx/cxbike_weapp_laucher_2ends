@@ -1,6 +1,9 @@
 package com.ruoyi.system.controller;
 
 import java.util.List;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author rf
  * @date 2021-06-02
  */
+@Api("图标管理")
 @RestController
 @RequestMapping("/system/icon")
 public class SysIconController extends BaseController
@@ -36,6 +40,7 @@ public class SysIconController extends BaseController
     /**
      * 查询图标列表
      */
+    @ApiOperation("查询图标列表")
     @PreAuthorize("@ss.hasPermi('system:icon:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysIcon sysIcon)
@@ -48,6 +53,7 @@ public class SysIconController extends BaseController
     /**
      * 导出图标列表
      */
+    @ApiOperation("导出图标列表")
     @PreAuthorize("@ss.hasPermi('system:icon:export')")
     @Log(title = "图标", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
@@ -61,6 +67,7 @@ public class SysIconController extends BaseController
     /**
      * 获取图标详细信息
      */
+    @ApiOperation("获取图标详细信息")
     @PreAuthorize("@ss.hasPermi('system:icon:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
@@ -71,6 +78,7 @@ public class SysIconController extends BaseController
     /**
      * 新增图标
      */
+    @ApiOperation("新增图标")
     @PreAuthorize("@ss.hasPermi('system:icon:add')")
     @Log(title = "图标", businessType = BusinessType.INSERT)
     @PostMapping
@@ -82,6 +90,7 @@ public class SysIconController extends BaseController
     /**
      * 修改图标
      */
+    @ApiOperation("修改图标")
     @PreAuthorize("@ss.hasPermi('system:icon:edit')")
     @Log(title = "图标", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -93,6 +102,7 @@ public class SysIconController extends BaseController
     /**
      * 删除图标
      */
+    @ApiOperation("删除图标")
     @PreAuthorize("@ss.hasPermi('system:icon:remove')")
     @Log(title = "图标", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")

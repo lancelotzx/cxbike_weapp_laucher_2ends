@@ -55,6 +55,7 @@ public class SysSpotController extends BaseController
     /**
      * 导出景区列表
      */
+    @ApiOperation("导出景区列表")
     @PreAuthorize("@ss.hasPermi('system:spot:export')")
     @Log(title = "景区", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
@@ -68,6 +69,7 @@ public class SysSpotController extends BaseController
     /**
      * 获取景区详细信息
      */
+    @ApiOperation("获取景区详细信息")
     @PreAuthorize("@ss.hasPermi('system:spot:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
@@ -78,6 +80,7 @@ public class SysSpotController extends BaseController
     /**
      * 新增景区
      */
+    @ApiOperation("新增景区")
     @PreAuthorize("@ss.hasPermi('system:spot:add')")
     @Log(title = "景区", businessType = BusinessType.INSERT)
     @PostMapping
@@ -89,6 +92,7 @@ public class SysSpotController extends BaseController
     /**
      * 修改景区
      */
+    @ApiOperation("修改景区")
     @PreAuthorize("@ss.hasPermi('system:spot:edit')")
     @Log(title = "景区", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -100,6 +104,7 @@ public class SysSpotController extends BaseController
     /**
      * 删除景区
      */
+    @ApiOperation("删除景区")
     @PreAuthorize("@ss.hasPermi('system:spot:remove')")
     @Log(title = "景区", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
