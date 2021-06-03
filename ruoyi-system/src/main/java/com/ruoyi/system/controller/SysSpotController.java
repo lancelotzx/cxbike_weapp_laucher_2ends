@@ -19,6 +19,11 @@ import com.ruoyi.system.domain.SysSpot;
 import com.ruoyi.system.service.ISysSpotService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 景区Controller
@@ -26,6 +31,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author rf
  * @date 2021-06-02
  */
+@Api("畅行景区管理")
 @RestController
 @RequestMapping("/system/spot")
 public class SysSpotController extends BaseController
@@ -36,6 +42,7 @@ public class SysSpotController extends BaseController
     /**
      * 查询景区列表
      */
+    @ApiOperation("获取景区列表")
     @PreAuthorize("@ss.hasPermi('system:spot:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysSpot sysSpot)
