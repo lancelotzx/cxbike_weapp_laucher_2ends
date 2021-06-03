@@ -529,6 +529,9 @@ export default {
       version: "3.4.0",
     };
   },
+  created(){
+    this.$router.push({ path:  "/cxbike/spot" })
+  },
   methods: {
     goTarget(href) {
       window.open(href, "_blank");

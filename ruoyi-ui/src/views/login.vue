@@ -66,8 +66,8 @@ export default {
       codeUrl: "",
       cookiePassword: "",
       loginForm: {
-        username: "admin",
-        password: "admin123",
+        username: "cxbike",
+        password: "cxbike",
         //rememberMe: false,
          code: "888888",
         uuid: "1"
@@ -128,7 +128,7 @@ export default {
             Cookies.remove('rememberMe');
           } */
           this.$store.dispatch("Login", this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
+            this.$router.push({ path:  "/cxbike/spot" }).catch(()=>{});
           }).catch(() => {
             this.loading = false;
             this.getCode();
