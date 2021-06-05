@@ -107,7 +107,7 @@
     />
 
     <!-- 添加或修改景区对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="景区名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入景区名称" />
@@ -121,7 +121,7 @@
             >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="图标顺序，半角逗号分隔" prop="iconserial">
+        <el-form-item label="图标顺序" prop="iconserial">
           <el-input v-model="form.iconserial" placeholder="请输入图标顺序，半角逗号分隔" />
         </el-form-item>
         <el-divider content-position="center">图标信息</el-divider>
@@ -136,7 +136,7 @@
         <el-table :data="sysIconList" :row-class-name="rowSysIconIndex" @selection-change="handleSysIconSelectionChange" ref="sysIcon">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="序号" align="center" prop="index" width="50"/>
-          <el-table-column label="景区id，使用uuid" prop="scenicid">
+          <el-table-column label="景区id" prop="scenicid" v-if="false">
             <template slot-scope="scope">
               <el-input v-model="scope.row.scenicid" placeholder="请输入景区id，使用uuid" />
             </template>
@@ -195,6 +195,8 @@ export default {
   },
   data() {
     return {
+      // 选中修改的景区id
+      tmp_scenicid: null,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -300,6 +302,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.tmp_scenicid = row.scenicid
       const scenicid = row.scenicid || this.ids
       getSpot(scenicid).then(response => {
         this.form = response.data;
@@ -349,8 +352,9 @@ export default {
     },
     /** 图标添加按钮操作 */
     handleAddSysIcon() {
+      console.log('here', this.tmp_scenicid)
       let obj = {};
-      obj.scenicid = "";
+      obj.scenicid = this.tmp_scenicid;
       obj.iconname = "";
       obj.iconurl = "";
       obj.type = "";
