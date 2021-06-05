@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.SysSpotMapper">
-    
+
     <resultMap type="SysSpot" id="SysSpotResult">
         <result property="scenicid"    column="scenicId"    />
         <result property="name"    column="name"    />
@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="SysIcon" id="SysIconResult">
         <result property="iconid"    column="sub_iconid"    />
         <result property="scenicid"    column="sub_scenicId"    />
-        <result property="name"    column="sub_name"    />
+        <result property="iconname"    column="sub_iconname"    />
         <result property="iconurl"    column="sub_iconurl"    />
         <result property="type"    column="sub_type"    />
         <result property="tags"    column="sub_tags"    />
@@ -33,20 +33,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectSysSpotList" parameterType="SysSpot" resultMap="SysSpotResult">
         <include refid="selectSysSpotVo"/>
-        <where>  
+        <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>
-    
+
     <select id="selectSysSpotById" parameterType="String" resultMap="SysSpotSysIconResult">
         select a.scenicId, a.name, a.status, a.iconserial,
-            b.iconid as sub_iconid, b.scenicId as sub_scenicId, b.name as sub_name, b.iconurl as sub_iconurl, b.type as sub_type, b.tags as sub_tags, b.appid as sub_appid, b.linkname as sub_linkname, b.h5url as sub_h5url
+        b.iconid as sub_iconid, b.scenicId as sub_scenicId, b.iconname as sub_iconname, b.iconurl as sub_iconurl, b.type as sub_type, b.tags as sub_tags, b.appid as sub_appid, b.linkname as sub_linkname, b.h5url as sub_h5url
         from sys_spot a
         left join sys_icon b on b.scenicId = a.scenicId
         where a.scenicId = #{scenicid}
     </select>
-        
+
     <insert id="insertSysSpot" parameterType="SysSpot">
         insert into sys_spot
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -54,13 +54,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="name != null and name != ''">name,</if>
             <if test="status != null and status != ''">status,</if>
             <if test="iconserial != null">iconserial,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="scenicid != null">#{scenicid},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="status != null and status != ''">#{status},</if>
             <if test="iconserial != null">#{iconserial},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateSysSpot" parameterType="SysSpot">
@@ -78,27 +78,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteSysSpotByIds" parameterType="String">
-        delete from sys_spot where scenicId in 
+        delete from sys_spot where scenicId in
         <foreach item="scenicid" collection="array" open="(" separator="," close=")">
             #{scenicid}
         </foreach>
     </delete>
-    
+
     <delete id="deleteSysIconByScenicIds" parameterType="String">
-        delete from sys_icon where scenicId in 
+        delete from sys_icon where scenicId in
         <foreach item="scenicId" collection="array" open="(" separator="," close=")">
             #{scenicId}
         </foreach>
     </delete>
 
-    <delete id="deleteSysIconByScenicId" parameterType="Long">
+    <delete id="deleteSysIconByScenicId" parameterType="String">
         delete from sys_icon where scenicId = #{scenicId}
     </delete>
 
     <insert id="batchSysIcon">
-        insert into sys_icon( iconid, scenicId, name, iconurl, type, tags, appid, linkname, h5url) values
-		<foreach item="item" index="index" collection="list" separator=",">
-            ( #{item.iconid}, #{item.scenicid}, #{item.name}, #{item.iconurl}, #{item.type}, #{item.tags}, #{item.appid}, #{item.linkname}, #{item.h5url})
+        insert into sys_icon( iconid, scenicId, iconname, iconurl, type, tags, appid, linkname, h5url) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.iconid}, #{item.scenicid}, #{item.iconname}, #{item.iconurl}, #{item.type}, #{item.tags}, #{item.appid}, #{item.linkname}, #{item.h5url})
         </foreach>
     </insert>
 </mapper>

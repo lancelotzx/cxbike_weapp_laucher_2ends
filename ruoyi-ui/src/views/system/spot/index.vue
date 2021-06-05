@@ -136,14 +136,14 @@
         <el-table :data="sysIconList" :row-class-name="rowSysIconIndex" @selection-change="handleSysIconSelectionChange" ref="sysIcon">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="序号" align="center" prop="index" width="50"/>
-          <el-table-column label="景区id" prop="scenicid">
+          <el-table-column label="景区id，使用uuid" prop="scenicid">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.scenicid" placeholder="请输入景区id" />
+              <el-input v-model="scope.row.scenicid" placeholder="请输入景区id，使用uuid" />
             </template>
           </el-table-column>
-          <el-table-column label="图标名称" prop="name">
+          <el-table-column label="图标名称" prop="iconname">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.name" placeholder="请输入图标名称" />
+              <el-input v-model="scope.row.iconname" placeholder="请输入图标名称" />
             </template>
           </el-table-column>
           <el-table-column label="图标图片链接地址" prop="iconurl">
@@ -151,19 +151,19 @@
               <el-input v-model="scope.row.iconurl" placeholder="请输入图标图片链接地址" />
             </template>
           </el-table-column>
-          <el-table-column label="链接类型，可能为小程序，列表，h5" prop="type">
+          <el-table-column label="链接类型，可能为小程序，h5， 列表" prop="type">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.type" placeholder="请输入链接类型，可能为小程序，列表，h5" />
+              <el-input v-model="scope.row.type" placeholder="请输入链接类型，可能为小程序，h5， 列表" />
             </template>
           </el-table-column>
-          <el-table-column label="标签，逗号分隔" prop="tags">
+          <el-table-column label="标签，逗号分隔，方便用户维护数据" prop="tags">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.tags" placeholder="请输入标签，逗号分隔" />
+              <el-input v-model="scope.row.tags" placeholder="请输入标签，逗号分隔，方便用户维护数据" />
             </template>
           </el-table-column>
-          <el-table-column label="图标对应小程序id" prop="appid">
+          <el-table-column label="图标对应小程序id，当为小程序时启用" prop="appid">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.appid" placeholder="请输入图标对应小程序id" />
+              <el-input v-model="scope.row.appid" placeholder="请输入图标对应小程序id，当为小程序时启用" />
             </template>
           </el-table-column>
           <el-table-column label="图标对应H5网址链接名称，或小程序名称" prop="linkname">
@@ -351,7 +351,7 @@ export default {
     handleAddSysIcon() {
       let obj = {};
       obj.scenicid = "";
-      obj.name = "";
+      obj.iconname = "";
       obj.iconurl = "";
       obj.type = "";
       obj.tags = "";
