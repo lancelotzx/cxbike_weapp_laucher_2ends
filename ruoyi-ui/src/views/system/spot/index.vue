@@ -74,7 +74,7 @@
 
     <el-table v-loading="loading" :data="spotList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="景区状态" align="center" prop="scenicid" />
+      <el-table-column label="景区id" align="center" prop="scenicid" />
       <el-table-column label="景区名称" align="center" prop="name" />
       <el-table-column label="景区状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="图标顺序，半角逗号分隔" align="center" prop="iconserial" />
