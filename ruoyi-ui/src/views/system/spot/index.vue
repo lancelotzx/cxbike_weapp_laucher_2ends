@@ -153,7 +153,16 @@
           </el-table-column>
           <el-table-column label="链接类型，可能为小程序，h5， 列表" prop="type">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.type" placeholder="请输入链接类型，可能为小程序，h5， 列表" />
+              <!-- <el-input v-model="scope.row.type" placeholder="请输入链接类型，可能为小程序，h5， 列表" />
+             -->
+            <el-select v-model="scope.row.type" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
             </template>
           </el-table-column>
           <el-table-column label="标签，逗号分隔，方便用户维护数据" prop="tags">
@@ -195,6 +204,17 @@ export default {
   },
   data() {
     return {
+      // icon的类型option
+      options: [{
+          value: '1',
+          label: '小程序'
+        }, {
+          value: '2',
+          label: 'H5页面'
+        }, {
+          value: '3',
+          label: '三级列表'
+        }],
       // 选中修改的景区id
       tmp_scenicid: null,
       // 遮罩层
