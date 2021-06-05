@@ -10,14 +10,14 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 景区对象 sys_spot
  * 
  * @author rf
- * @date 2021-06-02
+ * @date 2021-06-05
  */
 public class SysSpot extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private String scenicid;
 
     /** 景区名称 */
     @Excel(name = "景区名称")
@@ -27,17 +27,21 @@ public class SysSpot extends BaseEntity
     @Excel(name = "景区状态")
     private String status;
 
+    /** 图标顺序，半角逗号分隔 */
+    @Excel(name = "图标顺序，半角逗号分隔")
+    private String iconserial;
+
     /** 图标信息 */
     private List<SysIcon> sysIconList;
 
-    public void setId(Long id) 
+    public void setScenicid(String scenicid) 
     {
-        this.id = id;
+        this.scenicid = scenicid;
     }
 
-    public Long getId() 
+    public String getScenicid() 
     {
-        return id;
+        return scenicid;
     }
     public void setName(String name) 
     {
@@ -57,6 +61,15 @@ public class SysSpot extends BaseEntity
     {
         return status;
     }
+    public void setIconserial(String iconserial) 
+    {
+        this.iconserial = iconserial;
+    }
+
+    public String getIconserial() 
+    {
+        return iconserial;
+    }
 
     public List<SysIcon> getSysIconList()
     {
@@ -71,9 +84,10 @@ public class SysSpot extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
+            .append("scenicid", getScenicid())
             .append("name", getName())
             .append("status", getStatus())
+            .append("iconserial", getIconserial())
             .append("sysIconList", getSysIconList())
             .toString();
     }

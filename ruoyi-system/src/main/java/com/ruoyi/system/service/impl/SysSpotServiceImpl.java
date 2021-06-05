@@ -15,7 +15,7 @@ import com.ruoyi.system.service.ISysSpotService;
  * 景区Service业务层处理
  * 
  * @author rf
- * @date 2021-06-02
+ * @date 2021-06-05
  */
 @Service
 public class SysSpotServiceImpl implements ISysSpotService 
@@ -26,13 +26,13 @@ public class SysSpotServiceImpl implements ISysSpotService
     /**
      * 查询景区
      * 
-     * @param id 景区ID
+     * @param scenicid 景区ID
      * @return 景区
      */
     @Override
-    public SysSpot selectSysSpotById(Long id)
+    public SysSpot selectSysSpotById(String scenicid)
     {
-        return sysSpotMapper.selectSysSpotById(id);
+        return sysSpotMapper.selectSysSpotById(scenicid);
     }
 
     /**
@@ -72,7 +72,7 @@ public class SysSpotServiceImpl implements ISysSpotService
     @Override
     public int updateSysSpot(SysSpot sysSpot)
     {
-        sysSpotMapper.deleteSysIconBySpotId(sysSpot.getId());
+        sysSpotMapper.deleteSysIconByScenicId(sysSpot.getScenicid());
         insertSysIcon(sysSpot);
         return sysSpotMapper.updateSysSpot(sysSpot);
     }
@@ -80,28 +80,28 @@ public class SysSpotServiceImpl implements ISysSpotService
     /**
      * 批量删除景区
      * 
-     * @param ids 需要删除的景区ID
+     * @param scenicids 需要删除的景区ID
      * @return 结果
      */
     @Transactional
     @Override
-    public int deleteSysSpotByIds(Long[] ids)
+    public int deleteSysSpotByIds(String[] scenicids)
     {
-        sysSpotMapper.deleteSysIconBySpotIds(ids);
-        return sysSpotMapper.deleteSysSpotByIds(ids);
+        sysSpotMapper.deleteSysIconByScenicIds(scenicids);
+        return sysSpotMapper.deleteSysSpotByIds(scenicids);
     }
 
     /**
      * 删除景区信息
      * 
-     * @param id 景区ID
+     * @param scenicid 景区ID
      * @return 结果
      */
     @Override
-    public int deleteSysSpotById(Long id)
+    public int deleteSysSpotById(String scenicid)
     {
-        sysSpotMapper.deleteSysIconBySpotId(id);
-        return sysSpotMapper.deleteSysSpotById(id);
+        sysSpotMapper.deleteSysIconByScenicId(scenicid);
+        return sysSpotMapper.deleteSysSpotById(scenicid);
     }
 
     /**
@@ -112,13 +112,13 @@ public class SysSpotServiceImpl implements ISysSpotService
     public void insertSysIcon(SysSpot sysSpot)
     {
         List<SysIcon> sysIconList = sysSpot.getSysIconList();
-        Long id = sysSpot.getId();
+        String scenicid = sysSpot.getScenicid();
         if (StringUtils.isNotNull(sysIconList))
         {
             List<SysIcon> list = new ArrayList<SysIcon>();
             for (SysIcon sysIcon : sysIconList)
             {
-                sysIcon.setSpotId(id);
+                sysIcon.setScenicid(scenicid);
                 list.add(sysIcon);
             }
             if (list.size() > 0)

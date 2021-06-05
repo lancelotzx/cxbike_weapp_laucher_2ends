@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysLv3listMapper">
+    
+    <resultMap type="SysLv3list" id="SysLv3listResult">
+        <result property="id"    column="id"    />
+        <result property="iconid"    column="iconid"    />
+        <result property="name"    column="name"    />
+        <result property="price"    column="price"    />
+        <result property="picname"    column="picname"    />
+        <result property="picurl"    column="picurl"    />
+        <result property="type"    column="type"    />
+        <result property="appid"    column="appid"    />
+        <result property="linkname"    column="linkname"    />
+        <result property="h5url"    column="h5url"    />
+        <result property="tags"    column="tags"    />
+    </resultMap>
+
+    <sql id="selectSysLv3listVo">
+        select id, iconid, name, price, picname, picurl, type, appid, linkname, h5url, tags from sys_lv3list
+    </sql>
+
+    <select id="selectSysLv3listList" parameterType="SysLv3list" resultMap="SysLv3listResult">
+        <include refid="selectSysLv3listVo"/>
+        <where>  
+            <if test="iconid != null "> and iconid = #{iconid}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="picname != null  and picname != ''"> and picname like concat('%', #{picname}, '%')</if>
+            <if test="picurl != null  and picurl != ''"> and picurl = #{picurl}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
+            <if test="linkname != null  and linkname != ''"> and linkname like concat('%', #{linkname}, '%')</if>
+            <if test="h5url != null  and h5url != ''"> and h5url = #{h5url}</if>
+            <if test="tags != null  and tags != ''"> and tags = #{tags}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysLv3listById" parameterType="Long" resultMap="SysLv3listResult">
+        <include refid="selectSysLv3listVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysLv3list" parameterType="SysLv3list" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_lv3list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="iconid != null">iconid,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="price != null">price,</if>
+            <if test="picname != null">picname,</if>
+            <if test="picurl != null">picurl,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="appid != null">appid,</if>
+            <if test="linkname != null">linkname,</if>
+            <if test="h5url != null">h5url,</if>
+            <if test="tags != null">tags,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="iconid != null">#{iconid},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="price != null">#{price},</if>
+            <if test="picname != null">#{picname},</if>
+            <if test="picurl != null">#{picurl},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="appid != null">#{appid},</if>
+            <if test="linkname != null">#{linkname},</if>
+            <if test="h5url != null">#{h5url},</if>
+            <if test="tags != null">#{tags},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysLv3list" parameterType="SysLv3list">
+        update sys_lv3list
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="iconid != null">iconid = #{iconid},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="picname != null">picname = #{picname},</if>
+            <if test="picurl != null">picurl = #{picurl},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="appid != null">appid = #{appid},</if>
+            <if test="linkname != null">linkname = #{linkname},</if>
+            <if test="h5url != null">h5url = #{h5url},</if>
+            <if test="tags != null">tags = #{tags},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysLv3listById" parameterType="Long">
+        delete from sys_lv3list where id = #{id}
+    </delete>
+
+    <delete id="deleteSysLv3listByIds" parameterType="String">
+        delete from sys_lv3list where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

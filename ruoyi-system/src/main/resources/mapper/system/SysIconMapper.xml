@@ -5,77 +5,126 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.system.mapper.SysIconMapper">
     
     <resultMap type="SysIcon" id="SysIconResult">
-        <result property="id"    column="id"    />
-        <result property="spotId"    column="spot_id"    />
-        <result property="name"    column="name"    />
-        <result property="url"    column="url"    />
+        <result property="iconid"    column="iconid"    />
+        <result property="scenicid"    column="scenicId"    />
+        <result property="iconname"    column="iconname"    />
+        <result property="iconurl"    column="iconurl"    />
         <result property="type"    column="type"    />
         <result property="tags"    column="tags"    />
         <result property="appid"    column="appid"    />
+        <result property="linkname"    column="linkname"    />
+        <result property="h5url"    column="h5url"    />
+    </resultMap>
+
+    <resultMap id="SysIconSysLv3listResult" type="SysIcon" extends="SysIconResult">
+        <collection property="sysLv3listList" notNullColumn="sub_id" javaType="java.util.List" resultMap="SysLv3listResult" />
+    </resultMap>
+
+    <resultMap type="SysLv3list" id="SysLv3listResult">
+        <result property="id"    column="sub_id"    />
+        <result property="iconid"    column="sub_iconid"    />
+        <result property="name"    column="sub_name"    />
+        <result property="price"    column="sub_price"    />
+        <result property="picname"    column="sub_picname"    />
+        <result property="picurl"    column="sub_picurl"    />
+        <result property="type"    column="sub_type"    />
+        <result property="appid"    column="sub_appid"    />
+        <result property="linkname"    column="sub_linkname"    />
+        <result property="h5url"    column="sub_h5url"    />
+        <result property="tags"    column="sub_tags"    />
     </resultMap>
 
     <sql id="selectSysIconVo">
-        select id, spot_id, name, url, type, tags, appid from sys_icon
+        select iconid, scenicId, iconname, iconurl, type, tags, appid, linkname, h5url from sys_icon
     </sql>
 
     <select id="selectSysIconList" parameterType="SysIcon" resultMap="SysIconResult">
         <include refid="selectSysIconVo"/>
         <where>  
-            <if test="spotId != null "> and spot_id = #{spotId}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="scenicid != null  and scenicid != ''"> and scenicId = #{scenicid}</if>
+            <if test="iconname != null  and iconname != ''"> and iconname like concat('%', #{iconname}, '%')</if>
+            <if test="iconurl != null  and iconurl != ''"> and iconurl = #{iconurl}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="tags != null  and tags != ''"> and tags = #{tags}</if>
             <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
+            <if test="linkname != null  and linkname != ''"> and linkname like concat('%', #{linkname}, '%')</if>
+            <if test="h5url != null  and h5url != ''"> and h5url = #{h5url}</if>
         </where>
     </select>
     
-    <select id="selectSysIconById" parameterType="Long" resultMap="SysIconResult">
-        <include refid="selectSysIconVo"/>
-        where id = #{id}
+    <select id="selectSysIconById" parameterType="Long" resultMap="SysIconSysLv3listResult">
+        select a.iconid, a.scenicId, a.iconname, a.iconurl, a.type, a.tags, a.appid, a.linkname, a.h5url,
+            b.id as sub_id, b.iconid as sub_iconid, b.name as sub_name, b.price as sub_price, b.picname as sub_picname, b.picurl as sub_picurl, b.type as sub_type, b.appid as sub_appid, b.linkname as sub_linkname, b.h5url as sub_h5url, b.tags as sub_tags
+        from sys_icon a
+        left join sys_lv3list b on b.iconid = a.iconid
+        where a.iconid = #{iconid}
     </select>
         
-    <insert id="insertSysIcon" parameterType="SysIcon" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertSysIcon" parameterType="SysIcon" useGeneratedKeys="true" keyProperty="iconid">
         insert into sys_icon
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="spotId != null">spot_id,</if>
-            <if test="name != null and name != ''">name,</if>
-            <if test="url != null">url,</if>
+            <if test="scenicid != null and scenicid != ''">scenicId,</if>
+            <if test="iconname != null and iconname != ''">iconname,</if>
+            <if test="iconurl != null">iconurl,</if>
             <if test="type != null and type != ''">type,</if>
             <if test="tags != null">tags,</if>
             <if test="appid != null">appid,</if>
+            <if test="linkname != null">linkname,</if>
+            <if test="h5url != null">h5url,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="spotId != null">#{spotId},</if>
-            <if test="name != null and name != ''">#{name},</if>
-            <if test="url != null">#{url},</if>
+            <if test="scenicid != null and scenicid != ''">#{scenicid},</if>
+            <if test="iconname != null and iconname != ''">#{iconname},</if>
+            <if test="iconurl != null">#{iconurl},</if>
             <if test="type != null and type != ''">#{type},</if>
             <if test="tags != null">#{tags},</if>
             <if test="appid != null">#{appid},</if>
+            <if test="linkname != null">#{linkname},</if>
+            <if test="h5url != null">#{h5url},</if>
          </trim>
     </insert>
 
     <update id="updateSysIcon" parameterType="SysIcon">
         update sys_icon
         <trim prefix="SET" suffixOverrides=",">
-            <if test="spotId != null">spot_id = #{spotId},</if>
-            <if test="name != null and name != ''">name = #{name},</if>
-            <if test="url != null">url = #{url},</if>
+            <if test="scenicid != null and scenicid != ''">scenicId = #{scenicid},</if>
+            <if test="iconname != null and iconname != ''">iconname = #{iconname},</if>
+            <if test="iconurl != null">iconurl = #{iconurl},</if>
             <if test="type != null and type != ''">type = #{type},</if>
             <if test="tags != null">tags = #{tags},</if>
             <if test="appid != null">appid = #{appid},</if>
+            <if test="linkname != null">linkname = #{linkname},</if>
+            <if test="h5url != null">h5url = #{h5url},</if>
         </trim>
-        where id = #{id}
+        where iconid = #{iconid}
     </update>
 
     <delete id="deleteSysIconById" parameterType="Long">
-        delete from sys_icon where id = #{id}
+        delete from sys_icon where iconid = #{iconid}
     </delete>
 
     <delete id="deleteSysIconByIds" parameterType="String">
-        delete from sys_icon where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
+        delete from sys_icon where iconid in 
+        <foreach item="iconid" collection="array" open="(" separator="," close=")">
+            #{iconid}
         </foreach>
     </delete>
+    
+    <delete id="deleteSysLv3listByIconids" parameterType="String">
+        delete from sys_lv3list where iconid in 
+        <foreach item="iconid" collection="array" open="(" separator="," close=")">
+            #{iconid}
+        </foreach>
+    </delete>
+
+    <delete id="deleteSysLv3listByIconid" parameterType="Long">
+        delete from sys_lv3list where iconid = #{iconid}
+    </delete>
+
+    <insert id="batchSysLv3list">
+        insert into sys_lv3list( id, iconid, name, price, picname, picurl, type, appid, linkname, h5url, tags) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.iconid}, #{item.name}, #{item.price}, #{item.picname}, #{item.picurl}, #{item.type}, #{item.appid}, #{item.linkname}, #{item.h5url}, #{item.tags})
+        </foreach>
+    </insert>
 </mapper>

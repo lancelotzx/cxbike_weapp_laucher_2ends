@@ -8,17 +8,17 @@ import com.ruoyi.system.domain.SysIcon;
  * 景区Mapper接口
  * 
  * @author rf
- * @date 2021-06-02
+ * @date 2021-06-05
  */
 public interface SysSpotMapper 
 {
     /**
      * 查询景区
      * 
-     * @param id 景区ID
+     * @param scenicid 景区ID
      * @return 景区
      */
-    public SysSpot selectSysSpotById(Long id);
+    public SysSpot selectSysSpotById(String scenicid);
 
     /**
      * 查询景区列表
@@ -47,18 +47,18 @@ public interface SysSpotMapper
     /**
      * 删除景区
      * 
-     * @param id 景区ID
+     * @param scenicid 景区ID
      * @return 结果
      */
-    public int deleteSysSpotById(Long id);
+    public int deleteSysSpotById(String scenicid);
 
     /**
      * 批量删除景区
      * 
-     * @param ids 需要删除的数据ID
+     * @param scenicids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteSysSpotByIds(Long[] ids);
+    public int deleteSysSpotByIds(String[] scenicids);
 
     /**
      * 批量删除图标
@@ -66,7 +66,7 @@ public interface SysSpotMapper
      * @param customerIds 需要删除的数据ID
      * @return 结果
      */
-    public int deleteSysIconBySpotIds(Long[] ids);
+    public int deleteSysIconByScenicIds(String[] scenicids);
     
     /**
      * 批量新增图标
@@ -83,5 +83,5 @@ public interface SysSpotMapper
      * @param roleId 角色ID
      * @return 结果
      */
-    public int deleteSysIconBySpotId(Long id);
+    public int deleteSysIconByScenicId(String scenicid);
 }

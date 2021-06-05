@@ -71,10 +71,10 @@ public class SysSpotController extends BaseController
      */
     @ApiOperation("获取景区详细信息")
     @PreAuthorize("@ss.hasPermi('system:spot:query')")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    @GetMapping(value = "/{scenicid}")
+    public AjaxResult getInfo(@PathVariable("scenicid") String scenicid)
     {
-        return AjaxResult.success(sysSpotService.selectSysSpotById(id));
+        return AjaxResult.success(sysSpotService.selectSysSpotById(scenicid));
     }
 
     /**
@@ -107,9 +107,9 @@ public class SysSpotController extends BaseController
     @ApiOperation("删除景区")
     @PreAuthorize("@ss.hasPermi('system:spot:remove')")
     @Log(title = "景区", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@DeleteMapping("/{scenicids}")
+    public AjaxResult remove(@PathVariable String[] scenicids)
     {
-        return toAjax(sysSpotService.deleteSysSpotByIds(ids));
+        return toAjax(sysSpotService.deleteSysSpotByIds(scenicids));
     }
 }

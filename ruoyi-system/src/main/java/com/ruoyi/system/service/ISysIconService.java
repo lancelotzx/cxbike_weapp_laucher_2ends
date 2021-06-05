@@ -7,17 +7,17 @@ import com.ruoyi.system.domain.SysIcon;
  * 图标Service接口
  * 
  * @author rf
- * @date 2021-06-02
+ * @date 2021-06-05
  */
 public interface ISysIconService 
 {
     /**
      * 查询图标
      * 
-     * @param id 图标ID
+     * @param iconid 图标ID
      * @return 图标
      */
-    public SysIcon selectSysIconById(Long id);
+    public SysIcon selectSysIconById(Long iconid);
 
     /**
      * 查询图标列表
@@ -46,16 +46,16 @@ public interface ISysIconService
     /**
      * 批量删除图标
      * 
-     * @param ids 需要删除的图标ID
+     * @param iconids 需要删除的图标ID
      * @return 结果
      */
-    public int deleteSysIconByIds(Long[] ids);
+    public int deleteSysIconByIds(Long[] iconids);
 
     /**
      * 删除图标信息
      * 
-     * @param id 图标ID
+     * @param iconid 图标ID
      * @return 结果
      */
-    public int deleteSysIconById(Long id);
+    public int deleteSysIconById(Long iconid);
 }

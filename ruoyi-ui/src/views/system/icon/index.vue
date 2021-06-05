@@ -1,51 +1,74 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="景区id" prop="spotId">
+      <el-form-item label="景区id，使用uuid" prop="scenicid">
         <el-input
-          v-model="queryParams.spotId"
-          placeholder="请输入景区id"
+          v-model="queryParams.scenicid"
+          placeholder="请输入景区id，使用uuid"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="图标名称" prop="name">
+      <el-form-item label="图标名称" prop="iconname">
         <el-input
-          v-model="queryParams.name"
+          v-model="queryParams.iconname"
           placeholder="请输入图标名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="图标链接地址" prop="url">
+      <el-form-item label="图标图片链接地址" prop="iconurl">
         <el-input
-          v-model="queryParams.url"
-          placeholder="请输入图标链接地址"
+          v-model="queryParams.iconurl"
+          placeholder="请输入图标图片链接地址"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="链接类型，可能为小程序，列表，h5" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择链接类型，可能为小程序，列表，h5" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+      <el-form-item label="链接类型，可能为小程序，h5， 列表" prop="type">
+        <el-select v-model="queryParams.type" placeholder="请选择链接类型，可能为小程序，h5， 列表" clearable size="small">
+          <el-option
+            v-for="dict in typeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="标签，逗号分隔" prop="tags">
+      <el-form-item label="标签，逗号分隔，方便用户维护数据" prop="tags">
         <el-input
           v-model="queryParams.tags"
-          placeholder="请输入标签，逗号分隔"
+          placeholder="请输入标签，逗号分隔，方便用户维护数据"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="图标对应小程序id" prop="appid">
+      <el-form-item label="图标对应小程序id，当为小程序时启用" prop="appid">
         <el-input
           v-model="queryParams.appid"
-          placeholder="请输入图标对应小程序id"
+          placeholder="请输入图标对应小程序id，当为小程序时启用"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="图标对应H5网址链接名称，或小程序名称" prop="linkname">
+        <el-input
+          v-model="queryParams.linkname"
+          placeholder="请输入图标对应H5网址链接名称，或小程序名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="图标对应h5的地址，当为h5类型时启用" prop="h5url">
+        <el-input
+          v-model="queryParams.h5url"
+          placeholder="请输入图标对应h5的地址，当为h5类型时启用"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -105,13 +128,15 @@
 
     <el-table v-loading="loading" :data="iconList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="图标id" align="center" prop="id" />
-      <el-table-column label="景区id" align="center" prop="spotId" />
-      <el-table-column label="图标名称" align="center" prop="name" />
-      <el-table-column label="图标链接地址" align="center" prop="url" />
-      <el-table-column label="链接类型，可能为小程序，列表，h5" align="center" prop="type" />
-      <el-table-column label="标签，逗号分隔" align="center" prop="tags" />
-      <el-table-column label="图标对应小程序id" align="center" prop="appid" />
+      <el-table-column label="图标id,由于排序需要，使用自增id" align="center" prop="iconid" />
+      <el-table-column label="景区id，使用uuid" align="center" prop="scenicid" />
+      <el-table-column label="图标名称" align="center" prop="iconname" />
+      <el-table-column label="图标图片链接地址" align="center" prop="iconurl" />
+      <el-table-column label="链接类型，可能为小程序，h5， 列表" align="center" prop="type" :formatter="typeFormat" />
+      <el-table-column label="标签，逗号分隔，方便用户维护数据" align="center" prop="tags" />
+      <el-table-column label="图标对应小程序id，当为小程序时启用" align="center" prop="appid" />
+      <el-table-column label="图标对应H5网址链接名称，或小程序名称" align="center" prop="linkname" />
+      <el-table-column label="图标对应h5的地址，当为h5类型时启用" align="center" prop="h5url" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -143,26 +168,95 @@
     <!-- 添加或修改图标对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="景区id" prop="spotId">
-          <el-input v-model="form.spotId" placeholder="请输入景区id" />
+        <el-form-item label="景区id，使用uuid" prop="scenicid">
+          <el-input v-model="form.scenicid" placeholder="请输入景区id，使用uuid" />
         </el-form-item>
-        <el-form-item label="图标名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入图标名称" />
+        <el-form-item label="图标名称" prop="iconname">
+          <el-input v-model="form.iconname" placeholder="请输入图标名称" />
         </el-form-item>
-        <el-form-item label="图标链接地址" prop="url">
-          <el-input v-model="form.url" placeholder="请输入图标链接地址" />
+        <el-form-item label="图标图片链接地址" prop="iconurl">
+          <el-input v-model="form.iconurl" placeholder="请输入图标图片链接地址" />
         </el-form-item>
-        <el-form-item label="链接类型，可能为小程序，列表，h5" prop="type">
-          <el-select v-model="form.type" placeholder="请选择链接类型，可能为小程序，列表，h5">
-            <el-option label="请选择字典生成" value="" />
+        <el-form-item label="链接类型，可能为小程序，h5， 列表" prop="type">
+          <el-select v-model="form.type" placeholder="请选择链接类型，可能为小程序，h5， 列表">
+            <el-option
+              v-for="dict in typeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="标签，逗号分隔" prop="tags">
-          <el-input v-model="form.tags" placeholder="请输入标签，逗号分隔" />
+        <el-form-item label="标签，逗号分隔，方便用户维护数据" prop="tags">
+          <el-input v-model="form.tags" placeholder="请输入标签，逗号分隔，方便用户维护数据" />
         </el-form-item>
-        <el-form-item label="图标对应小程序id" prop="appid">
-          <el-input v-model="form.appid" placeholder="请输入图标对应小程序id" />
+        <el-form-item label="图标对应小程序id，当为小程序时启用" prop="appid">
+          <el-input v-model="form.appid" placeholder="请输入图标对应小程序id，当为小程序时启用" />
         </el-form-item>
+        <el-form-item label="图标对应H5网址链接名称，或小程序名称" prop="linkname">
+          <el-input v-model="form.linkname" placeholder="请输入图标对应H5网址链接名称，或小程序名称" />
+        </el-form-item>
+        <el-form-item label="图标对应h5的地址，当为h5类型时启用" prop="h5url">
+          <el-input v-model="form.h5url" placeholder="请输入图标对应h5的地址，当为h5类型时启用" />
+        </el-form-item>
+        <el-divider content-position="center">${subTable.functionName}信息</el-divider>
+        <el-row :gutter="10" class="mb8">
+          <el-col :span="1.5">
+            <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddSysLv3list">添加</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDeleteSysLv3list">删除</el-button>
+          </el-col>
+        </el-row>
+        <el-table :data="sysLv3listList" :row-class-name="rowSysLv3listIndex" @selection-change="handleSysLv3listSelectionChange" ref="sysLv3list">
+          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column label="序号" align="center" prop="index" width="50"/>
+          <el-table-column label="第三极列表子项名称" prop="name">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.name" placeholder="请输入第三极列表子项名称" />
+            </template>
+          </el-table-column>
+          <el-table-column label="第三级列表子项价格" prop="price">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.price" placeholder="请输入第三级列表子项价格" />
+            </template>
+          </el-table-column>
+          <el-table-column label="第三级列表子项图片名称" prop="picname">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.picname" placeholder="请输入第三级列表子项图片名称" />
+            </template>
+          </el-table-column>
+          <el-table-column label="第三级列表子项图片url" prop="picurl">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.picurl" placeholder="请输入第三级列表子项图片url" />
+            </template>
+          </el-table-column>
+          <el-table-column label="第三级子项对应的链接类型，1小程序，2H5" prop="type">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.type" placeholder="请输入第三级子项对应的链接类型，1小程序，2H5" />
+            </template>
+          </el-table-column>
+          <el-table-column label="子项对应小程序id，当为小程序时启用" prop="appid">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.appid" placeholder="请输入子项对应小程序id，当为小程序时启用" />
+            </template>
+          </el-table-column>
+          <el-table-column label="子项对应链接名称，可以为小程序名称或H5网站名称" prop="linkname">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.linkname" placeholder="请输入子项对应链接名称，可以为小程序名称或H5网站名称" />
+            </template>
+          </el-table-column>
+          <el-table-column label="子项对应h5的地址，当为h5类型时启用" prop="h5url">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.h5url" placeholder="请输入子项对应h5的地址，当为h5类型时启用" />
+            </template>
+          </el-table-column>
+          <el-table-column label="标签，逗号分隔，方便用户维护数据" prop="tags">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.tags" placeholder="请输入标签，逗号分隔，方便用户维护数据" />
+            </template>
+          </el-table-column>
+        </el-table>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -185,6 +279,8 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      // 子表选中数据
+      checkedSysLv3list: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -195,39 +291,48 @@ export default {
       total: 0,
       // 图标表格数据
       iconList: [],
+      // ${subTable.functionName}表格数据
+      sysLv3listList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      // 链接类型，可能为小程序，h5， 列表字典
+      typeOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        spotId: null,
-        name: null,
-        url: null,
+        scenicid: null,
+        iconname: null,
+        iconurl: null,
         type: null,
         tags: null,
-        appid: null
+        appid: null,
+        linkname: null,
+        h5url: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        spotId: [
-          { required: true, message: "景区id不能为空", trigger: "blur" }
+        scenicid: [
+          { required: true, message: "景区id，使用uuid不能为空", trigger: "blur" }
         ],
-        name: [
+        iconname: [
           { required: true, message: "图标名称不能为空", trigger: "blur" }
         ],
         type: [
-          { required: true, message: "链接类型，可能为小程序，列表，h5不能为空", trigger: "change" }
+          { required: true, message: "链接类型，可能为小程序，h5， 列表不能为空", trigger: "change" }
         ],
       }
     };
   },
   created() {
     this.getList();
+    this.getDicts("icon_link_type").then(response => {
+      this.typeOptions = response.data;
+    });
   },
   methods: {
     /** 查询图标列表 */
@@ -239,6 +344,10 @@ export default {
         this.loading = false;
       });
     },
+    // 链接类型，可能为小程序，h5， 列表字典翻译
+    typeFormat(row, column) {
+      return this.selectDictLabel(this.typeOptions, row.type);
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -247,14 +356,17 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        id: null,
-        spotId: null,
-        name: null,
-        url: null,
+        iconid: null,
+        scenicid: null,
+        iconname: null,
+        iconurl: null,
         type: null,
         tags: null,
-        appid: null
+        appid: null,
+        linkname: null,
+        h5url: null
       };
+      this.sysLv3listList = [];
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -269,7 +381,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
+      this.ids = selection.map(item => item.iconid)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -282,9 +394,10 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getIcon(id).then(response => {
+      const iconid = row.iconid || this.ids
+      getIcon(iconid).then(response => {
         this.form = response.data;
+        this.sysLv3listList = response.data.sysLv3listList;
         this.open = true;
         this.title = "修改图标";
       });
@@ -293,7 +406,8 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != null) {
+          this.form.sysLv3listList = this.sysLv3listList;
+          if (this.form.iconid != null) {
             updateIcon(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -311,17 +425,52 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$confirm('是否确认删除图标编号为"' + ids + '"的数据项?', "警告", {
+      const iconids = row.iconid || this.ids;
+      this.$confirm('是否确认删除图标编号为"' + iconids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delIcon(ids);
+          return delIcon(iconids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
+    },
+	/** ${subTable.functionName}序号 */
+    rowSysLv3listIndex({ row, rowIndex }) {
+      row.index = rowIndex + 1;
+    },
+    /** ${subTable.functionName}添加按钮操作 */
+    handleAddSysLv3list() {
+      let obj = {};
+      obj.name = "";
+      obj.price = "";
+      obj.picname = "";
+      obj.picurl = "";
+      obj.type = "";
+      obj.appid = "";
+      obj.linkname = "";
+      obj.h5url = "";
+      obj.tags = "";
+      this.sysLv3listList.push(obj);
+    },
+    /** ${subTable.functionName}删除按钮操作 */
+    handleDeleteSysLv3list() {
+      if (this.checkedSysLv3list.length == 0) {
+        this.$alert("请先选择要删除的${subTable.functionName}数据", "提示", { confirmButtonText: "确定", });
+      } else {
+        this.sysLv3listList.splice(this.checkedSysLv3list[0].index - 1, 1);
+      }
+    },
+    /** 单选框选中数据 */
+    handleSysLv3listSelectionChange(selection) {
+      if (selection.length > 1) {
+        this.$refs.sysLv3list.clearSelection();
+        this.$refs.sysLv3list.toggleRowSelection(selection.pop());
+      } else {
+        this.checkedSysLv3list = selection;
+      }
     },
     /** 导出按钮操作 */
     handleExport() {

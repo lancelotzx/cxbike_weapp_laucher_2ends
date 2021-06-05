@@ -10,9 +10,9 @@ export function listSpot(query) {
 }
 
 // 查询景区详细
-export function getSpot(id) {
+export function getSpot(scenicid) {
   return request({
-    url: '/system/spot/' + id,
+    url: '/system/spot/' + scenicid,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateSpot(data) {
 }
 
 // 删除景区
-export function delSpot(id) {
+export function delSpot(scenicid) {
   return request({
-    url: '/system/spot/' + id,
+    url: '/system/spot/' + scenicid,
     method: 'delete'
   })
 }

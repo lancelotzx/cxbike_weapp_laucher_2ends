@@ -13,11 +13,11 @@
       <el-form-item label="景区状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择景区状态" clearable size="small">
           <el-option
-                v-for="dict in statusOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -74,8 +74,10 @@
 
     <el-table v-loading="loading" :data="spotList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="景区状态" align="center" prop="scenicid" />
       <el-table-column label="景区名称" align="center" prop="name" />
-      <el-table-column label="景区状态" :formatter="statusFormat" align="center" prop="status" />
+      <el-table-column label="景区状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column label="图标顺序，半角逗号分隔" align="center" prop="iconserial" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -113,11 +115,14 @@
         <el-form-item label="景区状态">
           <el-radio-group v-model="form.status">
             <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
+              v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+            >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item label="图标顺序，半角逗号分隔" prop="iconserial">
+          <el-input v-model="form.iconserial" placeholder="请输入图标顺序，半角逗号分隔" />
         </el-form-item>
         <el-divider content-position="center">图标信息</el-divider>
         <el-row :gutter="10" class="mb8">
@@ -131,14 +136,19 @@
         <el-table :data="sysIconList" :row-class-name="rowSysIconIndex" @selection-change="handleSysIconSelectionChange" ref="sysIcon">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="序号" align="center" prop="index" width="50"/>
+          <el-table-column label="景区id" prop="scenicid">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.scenicid" placeholder="请输入景区id" />
+            </template>
+          </el-table-column>
           <el-table-column label="图标名称" prop="name">
             <template slot-scope="scope">
               <el-input v-model="scope.row.name" placeholder="请输入图标名称" />
             </template>
           </el-table-column>
-          <el-table-column label="图标链接地址" prop="url">
+          <el-table-column label="图标图片链接地址" prop="iconurl">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.url" placeholder="请输入图标链接地址" />
+              <el-input v-model="scope.row.iconurl" placeholder="请输入图标图片链接地址" />
             </template>
           </el-table-column>
           <el-table-column label="链接类型，可能为小程序，列表，h5" prop="type">
@@ -154,6 +164,16 @@
           <el-table-column label="图标对应小程序id" prop="appid">
             <template slot-scope="scope">
               <el-input v-model="scope.row.appid" placeholder="请输入图标对应小程序id" />
+            </template>
+          </el-table-column>
+          <el-table-column label="图标对应H5网址链接名称，或小程序名称" prop="linkname">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.linkname" placeholder="请输入图标对应H5网址链接名称，或小程序名称" />
+            </template>
+          </el-table-column>
+          <el-table-column label="图标对应h5的地址，当为h5类型时启用" prop="h5url">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.h5url" placeholder="请输入图标对应h5的地址，当为h5类型时启用" />
             </template>
           </el-table-column>
         </el-table>
@@ -193,18 +213,18 @@ export default {
       spotList: [],
       // 图标表格数据
       sysIconList: [],
-      // 状态数据字典
-      statusOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      // 景区状态字典
+      statusOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         name: null,
-        status: null
+        status: null,
       },
       // 表单参数
       form: {},
@@ -215,16 +235,14 @@ export default {
         ],
         status: [
           { required: true, message: "景区状态不能为空", trigger: "blur" }
-        ]
+        ],
       }
     };
   },
   created() {
     this.getList();
-    // 获取景区状态的数据字典
     this.getDicts("sys_spot_status").then(response => {
       this.statusOptions = response.data;
-      //console.log(this.statusOptions)
     });
   },
   methods: {
@@ -237,7 +255,7 @@ export default {
         this.loading = false;
       });
     },
-     // 字典状态字典翻译
+    // 景区状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
     },
@@ -249,9 +267,10 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        id: null,
+        scenicid: null,
         name: null,
-        status: "0"
+        status: "0",
+        iconserial: null
       };
       this.sysIconList = [];
       this.resetForm("form");
@@ -268,7 +287,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
+      this.ids = selection.map(item => item.scenicid)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -281,8 +300,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getSpot(id).then(response => {
+      const scenicid = row.scenicid || this.ids
+      getSpot(scenicid).then(response => {
         this.form = response.data;
         this.sysIconList = response.data.sysIconList;
         this.open = true;
@@ -294,7 +313,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.form.sysIconList = this.sysIconList;
-          if (this.form.id != null) {
+          if (this.form.scenicid != null) {
             updateSpot(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -312,13 +331,13 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$confirm('是否确认删除景区编号为"' + ids + '"的数据项?', "警告", {
+      const scenicids = row.scenicid || this.ids;
+      this.$confirm('是否确认删除景区编号为"' + scenicids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delSpot(ids);
+          return delSpot(scenicids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -331,11 +350,14 @@ export default {
     /** 图标添加按钮操作 */
     handleAddSysIcon() {
       let obj = {};
+      obj.scenicid = "";
       obj.name = "";
-      obj.url = "";
+      obj.iconurl = "";
       obj.type = "";
       obj.tags = "";
       obj.appid = "";
+      obj.linkname = "";
+      obj.h5url = "";
       this.sysIconList.push(obj);
     },
     /** 图标删除按钮操作 */

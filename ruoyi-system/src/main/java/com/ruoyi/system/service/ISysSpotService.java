@@ -7,17 +7,17 @@ import com.ruoyi.system.domain.SysSpot;
  * 景区Service接口
  * 
  * @author rf
- * @date 2021-06-02
+ * @date 2021-06-05
  */
 public interface ISysSpotService 
 {
     /**
      * 查询景区
      * 
-     * @param id 景区ID
+     * @param scenicid 景区ID
      * @return 景区
      */
-    public SysSpot selectSysSpotById(Long id);
+    public SysSpot selectSysSpotById(String scenicid);
 
     /**
      * 查询景区列表
@@ -46,16 +46,16 @@ public interface ISysSpotService
     /**
      * 批量删除景区
      * 
-     * @param ids 需要删除的景区ID
+     * @param scenicids 需要删除的景区ID
      * @return 结果
      */
-    public int deleteSysSpotByIds(Long[] ids);
+    public int deleteSysSpotByIds(String[] scenicids);
 
     /**
      * 删除景区信息
      * 
-     * @param id 景区ID
+     * @param scenicid 景区ID
      * @return 结果
      */
-    public int deleteSysSpotById(Long id);
+    public int deleteSysSpotById(String scenicid);
 }

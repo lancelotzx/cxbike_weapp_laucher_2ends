@@ -69,10 +69,10 @@ public class SysIconController extends BaseController
      */
     @ApiOperation("获取图标详细信息")
     @PreAuthorize("@ss.hasPermi('system:icon:query')")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    @GetMapping(value = "/{iconid}")
+    public AjaxResult getInfo(@PathVariable("iconid") Long iconid)
     {
-        return AjaxResult.success(sysIconService.selectSysIconById(id));
+        return AjaxResult.success(sysIconService.selectSysIconById(iconid));
     }
 
     /**
@@ -105,9 +105,9 @@ public class SysIconController extends BaseController
     @ApiOperation("删除图标")
     @PreAuthorize("@ss.hasPermi('system:icon:remove')")
     @Log(title = "图标", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@DeleteMapping("/{iconids}")
+    public AjaxResult remove(@PathVariable Long[] iconids)
     {
-        return toAjax(sysIconService.deleteSysIconByIds(ids));
+        return toAjax(sysIconService.deleteSysIconByIds(iconids));
     }
 }

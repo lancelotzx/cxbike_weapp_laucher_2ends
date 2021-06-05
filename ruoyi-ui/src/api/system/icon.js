@@ -10,9 +10,9 @@ export function listIcon(query) {
 }
 
 // 查询图标详细
-export function getIcon(id) {
+export function getIcon(iconid) {
   return request({
-    url: '/system/icon/' + id,
+    url: '/system/icon/' + iconid,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateIcon(data) {
 }
 
 // 删除图标
-export function delIcon(id) {
+export function delIcon(iconid) {
   return request({
-    url: '/system/icon/' + id,
+    url: '/system/icon/' + iconid,
     method: 'delete'
   })
 }
