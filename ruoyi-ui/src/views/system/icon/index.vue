@@ -1,14 +1,20 @@
+<!--
+author:wangjia
+description: 图标管理页面
+  其中景区需要预先读取，用于景区列表
+-->
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="景区id" prop="scenicid">
-        <el-input
-          v-model="queryParams.scenicid"
-          placeholder="请输入景区id，使用uuid"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="景区" prop="scenicid">
+        <el-select v-model="queryParams.scenicid" placeholder="请选择景区">
+          <el-option
+            v-for="item in spotList"
+            :key="item.scenicid"
+            :label="item.name"
+            :value="item.scenicid">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="图标名称" prop="iconname">
         <el-input
@@ -133,8 +139,15 @@
     <!-- 添加或修改图标对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="景区id，使用uuid" prop="scenicid">
-          <el-input v-model="form.scenicid" placeholder="请输入景区id，使用uuid" />
+        <el-form-item label="景区" prop="scenicid">
+          <el-select v-model="form.scenicid" placeholder="请选择景区">
+            <el-option
+              v-for="item in spotList"
+              :key="item.scenicid"
+              :label="item.name"
+              :value="item.scenicid">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="图标名称" prop="iconname">
           <el-input v-model="form.iconname" placeholder="请输入图标名称" />
@@ -233,7 +246,7 @@
 
 <script>
 import { listIcon, getIcon, delIcon, addIcon, updateIcon, exportIcon } from "@/api/system/icon";
-
+import { listSpot } from "@/api/system/spot";
 export default {
   name: "Icon",
   components: {
@@ -264,6 +277,15 @@ export default {
       open: false,
       // 链接类型，可能为小程序，h5， 列表字典
       typeOptions: [],
+      // 查询全部景区用参数
+      querySpotParams: {
+        pageNum: 1,
+        pageSize: 10000,
+        name: null,
+        status: null,
+      },
+      spotTotal: 0,
+      spotList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -295,11 +317,23 @@ export default {
   },
   created() {
     this.getList();
+    this.getSpotList();
     this.getDicts("icon_link_type").then(response => {
       this.typeOptions = response.data;
     });
   },
   methods: {
+    /** 查询景区全部列表*/
+    /** 查询景区列表 */
+    getSpotList() {
+      this.loading = true;
+      listSpot(this.querySpotParams).then(response => {
+        this.spotList = response.rows;
+        this.spotTotal = response.total;
+        this.loading = false;
+      });
+    },
+
     /** 查询图标列表 */
     getList() {
       this.loading = true;
