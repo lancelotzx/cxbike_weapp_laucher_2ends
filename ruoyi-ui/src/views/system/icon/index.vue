@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="景区id，使用uuid" prop="scenicid">
+      <el-form-item label="景区id" prop="scenicid">
         <el-input
           v-model="queryParams.scenicid"
           placeholder="请输入景区id，使用uuid"
@@ -19,16 +19,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="图标图片链接地址" prop="iconurl">
-        <el-input
-          v-model="queryParams.iconurl"
-          placeholder="请输入图标图片链接地址"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="链接类型，可能为小程序，h5， 列表" prop="type">
+      <el-form-item label="链接类型" prop="type">
         <el-select v-model="queryParams.type" placeholder="请选择链接类型，可能为小程序，h5， 列表" clearable size="small">
           <el-option
             v-for="dict in typeOptions"
@@ -38,42 +29,16 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="标签，逗号分隔，方便用户维护数据" prop="tags">
+      <el-form-item label="备注" prop="tags">
         <el-input
           v-model="queryParams.tags"
-          placeholder="请输入标签，逗号分隔，方便用户维护数据"
+          placeholder="请输入备注"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="图标对应小程序id，当为小程序时启用" prop="appid">
-        <el-input
-          v-model="queryParams.appid"
-          placeholder="请输入图标对应小程序id，当为小程序时启用"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="图标对应H5网址链接名称，或小程序名称" prop="linkname">
-        <el-input
-          v-model="queryParams.linkname"
-          placeholder="请输入图标对应H5网址链接名称，或小程序名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="图标对应h5的地址，当为h5类型时启用" prop="h5url">
-        <el-input
-          v-model="queryParams.h5url"
-          placeholder="请输入图标对应h5的地址，当为h5类型时启用"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -133,7 +98,7 @@
       <el-table-column label="图标名称" align="center" prop="iconname" />
       <el-table-column label="图标图片链接地址" align="center" prop="iconurl" />
       <el-table-column label="链接类型，可能为小程序，h5， 列表" align="center" prop="type" :formatter="typeFormat" />
-      <el-table-column label="标签，逗号分隔，方便用户维护数据" align="center" prop="tags" />
+      <el-table-column label="备注" align="center" prop="tags" />
       <el-table-column label="图标对应小程序id，当为小程序时启用" align="center" prop="appid" />
       <el-table-column label="图标对应H5网址链接名称，或小程序名称" align="center" prop="linkname" />
       <el-table-column label="图标对应h5的地址，当为h5类型时启用" align="center" prop="h5url" />
@@ -187,8 +152,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="标签，逗号分隔，方便用户维护数据" prop="tags">
-          <el-input v-model="form.tags" placeholder="请输入标签，逗号分隔，方便用户维护数据" />
+        <el-form-item label="备注" prop="tags">
+          <el-input v-model="form.tags" placeholder="请输入备注" />
         </el-form-item>
         <el-form-item label="图标对应小程序id，当为小程序时启用" prop="appid">
           <el-input v-model="form.appid" placeholder="请输入图标对应小程序id，当为小程序时启用" />
@@ -251,7 +216,7 @@
               <el-input v-model="scope.row.h5url" placeholder="请输入子项对应h5的地址，当为h5类型时启用" />
             </template>
           </el-table-column>
-          <el-table-column label="标签，逗号分隔，方便用户维护数据" prop="tags">
+          <el-table-column label="备注" prop="tags">
             <template slot-scope="scope">
               <el-input v-model="scope.row.tags" placeholder="请输入标签，逗号分隔，方便用户维护数据" />
             </template>
