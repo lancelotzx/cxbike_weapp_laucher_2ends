@@ -113,7 +113,7 @@
           <el-input v-model="form.name" placeholder="请输入景区名称" />
         </el-form-item>
         <el-form-item label="景区id" prop="scenicid">
-          <el-input v-model="form.scenicid" placeholder="请输入景区id" />
+          <el-input v-model="form.scenicid" :disabled="modFlag" placeholder="请输入景区id" />
         </el-form-item>
         <el-form-item label="景区状态">
           <el-radio-group v-model="form.status">
@@ -262,6 +262,9 @@ export default {
       rules: {
         name: [
           { required: true, message: "景区名称不能为空", trigger: "blur" }
+        ],
+        scenicid: [
+          { required: true, message: "景区id不能为空", trigger: "blur" }
         ],
         status: [
           { required: true, message: "景区状态不能为空", trigger: "blur" }
