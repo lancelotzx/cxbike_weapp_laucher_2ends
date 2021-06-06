@@ -7,7 +7,7 @@
     <div class="user-info-head" @click="editCropper()"><img v-bind:src="options.img" title="点击上传图标" class="img-circle img-sm" /></div>
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body @opened="modalOpened"  @close="closeDialog()">
       <el-row>
-        <el-col :xs="24" :md="12" :style="{height: '350px'}">
+        <el-col :xs="24" :md="12" :style="{height: '300px'}">
           <vue-cropper
             ref="cropper"
             :img="options.img"
@@ -36,18 +36,7 @@
             </el-button>
           </el-upload>
         </el-col>
-        <el-col :lg="{span: 1, offset: 2}" :md="2">
-          <el-button icon="el-icon-plus" size="small" @click="changeScale(1)"></el-button>
-        </el-col>
-        <el-col :lg="{span: 1, offset: 1}" :md="2">
-          <el-button icon="el-icon-minus" size="small" @click="changeScale(-1)"></el-button>
-        </el-col>
-        <el-col :lg="{span: 1, offset: 1}" :md="2">
-          <el-button icon="el-icon-refresh-left" size="small" @click="rotateLeft()"></el-button>
-        </el-col>
-        <el-col :lg="{span: 1, offset: 1}" :md="2">
-          <el-button icon="el-icon-refresh-right" size="small" @click="rotateRight()"></el-button>
-        </el-col>
+        
         <el-col :lg="{span: 2, offset: 6}" :md="2">
           <el-button type="primary" size="small" @click="uploadImg()">提 交</el-button>
         </el-col>
@@ -75,7 +64,7 @@ export default {
       // 是否显示cropper
       visible: false,
       // 弹出层标题
-      title: "修改头像",
+      title: "图标上传",
       options: {
         img: this.resourceObj.iconurl, //裁剪图片的地址
         autoCrop: true, // 是否默认生成截图框
@@ -128,10 +117,10 @@ export default {
       this.$refs.cropper.getCropBlob(data => {
         let formData = new FormData();
         formData.append("avatarfile", data);
-        uploadAvatar(formData).then(response => {
+        uploadIcon(formData).then(response => {
           this.open = false;
           this.options.img = process.env.VUE_APP_BASE_API + response.imgUrl;
-          store.commit('SET_AVATAR', this.options.img);
+         // store.commit('SET_AVATAR', this.options.img);
           this.msgSuccess("修改成功");
           this.visible = false;
         });

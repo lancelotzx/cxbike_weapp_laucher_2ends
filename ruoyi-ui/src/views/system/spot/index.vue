@@ -201,7 +201,7 @@
 
 <script>
 import { listSpot, getSpot, delSpot, addSpot, updateSpot, exportSpot } from "@/api/system/spot";
-import iconAvatar from "./iconAvatar";
+import iconAvatar from "../icon/iconAvatar";
 
 export default {
   name: "Spot",

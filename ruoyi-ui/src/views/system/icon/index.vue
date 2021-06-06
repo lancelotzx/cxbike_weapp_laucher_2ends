@@ -102,7 +102,12 @@ description: 图标管理页面
       <el-table-column label="图标id,由于排序需要，使用自增id" align="center" prop="iconid" />
       <el-table-column label="景区id，使用uuid" align="center" prop="scenicid" />
       <el-table-column label="图标名称" align="center" prop="iconname" />
-      <el-table-column label="图标图片链接地址" align="center" prop="iconurl" />
+      <el-table-column label="图标预览" align="center" prop="iconurl" >
+        <template slot-scope="scope">
+              <!-- <el-input v-model="scope.row.iconurl" placeholder="请输入图标图片链接地址" /> -->
+              <iconAvatar :resourceObj="scope.row"  /> <!--这里把row都给到组件去-->
+            </template> <!--这里把row都给到组件去-->
+      </el-table-column>
       <el-table-column label="链接类型，可能为小程序，h5， 列表" align="center" prop="type" :formatter="typeFormat" />
       <el-table-column label="备注" align="center" prop="tags" />
       <el-table-column label="图标对应小程序id，当为小程序时启用" align="center" prop="appid" />
@@ -247,9 +252,11 @@ description: 图标管理页面
 <script>
 import { listIcon, getIcon, delIcon, addIcon, updateIcon, exportIcon } from "@/api/system/icon";
 import { listSpot } from "@/api/system/spot";
+import iconAvatar from "./iconAvatar";
 export default {
   name: "Icon",
   components: {
+    iconAvatar
   },
   data() {
     return {
