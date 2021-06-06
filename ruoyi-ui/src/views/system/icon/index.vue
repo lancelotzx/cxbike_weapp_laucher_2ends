@@ -137,7 +137,7 @@ description: 图标管理页面
     />
 
     <!-- 添加或修改图标对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="景区" prop="scenicid">
           <el-select v-model="form.scenicid" placeholder="请选择景区">
@@ -152,11 +152,11 @@ description: 图标管理页面
         <el-form-item label="图标名称" prop="iconname">
           <el-input v-model="form.iconname" placeholder="请输入图标名称" />
         </el-form-item>
-        <el-form-item label="图标图片链接地址" prop="iconurl">
+        <el-form-item label="图标图片" prop="iconurl">
           <el-input v-model="form.iconurl" placeholder="请输入图标图片链接地址" />
         </el-form-item>
-        <el-form-item label="链接类型，可能为小程序，h5， 列表" prop="type">
-          <el-select v-model="form.type" placeholder="请选择链接类型，可能为小程序，h5， 列表">
+        <el-form-item label="链接类型" prop="type">
+          <el-select v-model="form.type" placeholder="请选择链接类型">
             <el-option
               v-for="dict in typeOptions"
               :key="dict.dictValue"
@@ -168,16 +168,16 @@ description: 图标管理页面
         <el-form-item label="备注" prop="tags">
           <el-input v-model="form.tags" placeholder="请输入备注" />
         </el-form-item>
-        <el-form-item label="图标对应小程序id，当为小程序时启用" prop="appid">
+        <el-form-item label="图标对应小程序id" prop="appid">
           <el-input v-model="form.appid" placeholder="请输入图标对应小程序id，当为小程序时启用" />
         </el-form-item>
-        <el-form-item label="图标对应H5网址链接名称，或小程序名称" prop="linkname">
+        <el-form-item label="图标对应链接名称、小程序名称" prop="linkname">
           <el-input v-model="form.linkname" placeholder="请输入图标对应H5网址链接名称，或小程序名称" />
         </el-form-item>
-        <el-form-item label="图标对应h5的地址，当为h5类型时启用" prop="h5url">
+        <el-form-item label="图标对应h5或小程序的地址" prop="h5url">
           <el-input v-model="form.h5url" placeholder="请输入图标对应h5的地址，当为h5类型时启用" />
         </el-form-item>
-        <el-divider content-position="center">${subTable.functionName}信息</el-divider>
+        <el-divider content-position="center">$三级菜单信息</el-divider>
         <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
             <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddSysLv3list">添加</el-button>
