@@ -51,3 +51,13 @@ export function exportIcon(query) {
     params: query
   })
 }
+
+//图标上传到腾讯云COS的前端接口
+// 2级icon上传
+export function uploadIcon(data) {
+  return request({
+    url: '/system/icon/upload',
+    method: 'post',
+    data: data
+  })
+}
