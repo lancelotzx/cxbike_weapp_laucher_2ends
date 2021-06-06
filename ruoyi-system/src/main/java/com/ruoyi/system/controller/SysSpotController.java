@@ -1,5 +1,6 @@
 package com.ruoyi.system.controller;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,15 @@ public class SysSpotController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SysSpot sysSpot)
     {
-        return toAjax(sysSpotService.insertSysSpot(sysSpot));
+        int row = 0;
+        try {
+            row = sysSpotService.insertSysSpot(sysSpot);
+            return toAjax(row);
+        }catch (Exception e){
+            return toAjax(0);
+        }
+
+
     }
 
     /**
