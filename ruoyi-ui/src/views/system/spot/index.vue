@@ -112,6 +112,9 @@
         <el-form-item label="景区名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入景区名称" />
         </el-form-item>
+        <el-form-item label="景区id" prop="scenicid">
+          <el-input v-model="form.scenicid" placeholder="请输入景区id" />
+        </el-form-item>
         <el-form-item label="景区状态">
           <el-radio-group v-model="form.status">
             <el-radio
@@ -216,6 +219,10 @@ export default {
           value: '3',
           label: '三级列表'
         }],
+      //新增景区标志
+      addFlag: false,
+      // 修改景区标志
+      modFlag: false,
       // 选中修改的景区id
       tmp_scenicid: null,
       // 遮罩层
@@ -296,6 +303,8 @@ export default {
         iconserial: null
       };
       this.sysIconList = [];
+      this.addFlag = false;
+      this.modFlag = false;
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -318,11 +327,13 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
+      this.addFlag = true;
       this.title = "添加景区";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.modFlag = true;
       this.tmp_scenicid = row.scenicid
       const scenicid = row.scenicid || this.ids
       getSpot(scenicid).then(response => {
@@ -337,13 +348,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.form.sysIconList = this.sysIconList;
-          if (this.form.scenicid != null) {
+          if (this.modFlag) {
             updateSpot(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
-          } else {
+          } else if(this.addFlag) {
             addSpot(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
