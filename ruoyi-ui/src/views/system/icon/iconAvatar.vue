@@ -63,10 +63,10 @@ export default {
       title: "图标上传",
       options: {
         img: this.iconurl, //裁剪图片的地址
-        autoCrop: true, // 是否默认生成截图框
-        autoCropWidth: 200, // 默认生成截图框宽度
-        autoCropHeight: 200, // 默认生成截图框高度
-        fixedBox: true // 固定截图框大小 不允许改变
+        autoCrop: false, // 是否默认生成截图框
+        autoCropWidth: 64, // 默认生成截图框宽度
+        autoCropHeight: 64, // 默认生成截图框高度
+        fixedBox: false // 固定截图框大小 不允许改变
       },
       previews: {}
     };
@@ -159,7 +159,7 @@ export default {
   top: 0;
   bottom: 0;
   color: #eee;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0);
   font-size: 24px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;

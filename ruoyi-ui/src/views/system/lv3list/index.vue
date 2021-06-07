@@ -19,34 +19,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="第三级列表子项价格" prop="price">
-        <el-input
-          v-model="queryParams.price"
-          placeholder="请输入第三级列表子项价格"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="第三级列表子项图片名称" prop="picname">
-        <el-input
-          v-model="queryParams.picname"
-          placeholder="请输入第三级列表子项图片名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="第三级列表子项图片url" prop="picurl">
-        <el-input
-          v-model="queryParams.picurl"
-          placeholder="请输入第三级列表子项图片url"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="第三级子项对应的链接类型，1小程序，2H5" prop="type">
+      <el-form-item label="三级子项链接类型" prop="type">
         <el-select v-model="queryParams.type" placeholder="请选择第三级子项对应的链接类型，1小程序，2H5" clearable size="small">
           <el-option
             v-for="dict in typeOptions"
@@ -55,42 +28,6 @@
             :value="dict.dictValue"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="子项对应小程序id，当为小程序时启用" prop="appid">
-        <el-input
-          v-model="queryParams.appid"
-          placeholder="请输入子项对应小程序id，当为小程序时启用"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="子项对应链接名称，可以为小程序名称或H5网站名称" prop="linkname">
-        <el-input
-          v-model="queryParams.linkname"
-          placeholder="请输入子项对应链接名称，可以为小程序名称或H5网站名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="子项对应h5的地址，当为h5类型时启用" prop="h5url">
-        <el-input
-          v-model="queryParams.h5url"
-          placeholder="请输入子项对应h5的地址，当为h5类型时启用"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="标签，逗号分隔，方便用户维护数据" prop="tags">
-        <el-input
-          v-model="queryParams.tags"
-          placeholder="请输入标签，逗号分隔，方便用户维护数据"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -146,17 +83,19 @@
 
     <el-table v-loading="loading" :data="lv3listList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="使用自增id作为主键" align="center" prop="id" />
-      <el-table-column label="第二级图标的id" align="center" prop="iconid" />
+      <el-table-column label="id" align="center" prop="id" />
+      <el-table-column label="第二级图标id" align="center" prop="iconid" />
       <el-table-column label="第三极列表子项名称" align="center" prop="name" />
       <el-table-column label="第三级列表子项价格" align="center" prop="price" />
-      <el-table-column label="第三级列表子项图片名称" align="center" prop="picname" />
-      <el-table-column label="第三级列表子项图片url" align="center" prop="picurl" />
+      <el-table-column label="第三级列表子项图片预览" align="center" prop="picurl" >
+        <template slot-scope="scope">
+              <!-- <el-input v-model="scope.row.iconurl" placeholder="请输入图标图片链接地址" /> -->
+              <iconAvatar :iconurl="scope.row.picurl"  /> <!--这里把row都给到组件去-->
+            </template>
+      </el-table-column>
       <el-table-column label="第三级子项对应的链接类型，1小程序，2H5" align="center" prop="type" :formatter="typeFormat" />
       <el-table-column label="子项对应小程序id，当为小程序时启用" align="center" prop="appid" />
-      <el-table-column label="子项对应链接名称，可以为小程序名称或H5网站名称" align="center" prop="linkname" />
-      <el-table-column label="子项对应h5的地址，当为h5类型时启用" align="center" prop="h5url" />
-      <el-table-column label="标签，逗号分隔，方便用户维护数据" align="center" prop="tags" />
+      <el-table-column label="标签,维护数据" align="center" prop="tags" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -200,8 +139,9 @@
         <el-form-item label="第三级列表子项图片名称" prop="picname">
           <el-input v-model="form.picname" placeholder="请输入第三级列表子项图片名称" />
         </el-form-item>
-        <el-form-item label="第三级列表子项图片url" prop="picurl">
-          <el-input v-model="form.picurl" placeholder="请输入第三级列表子项图片url" />
+        <el-form-item label="三级列表图片url" prop="picurl">
+          <!-- <el-input v-model="form.picurl" placeholder="请输入第三级列表子项图片url" /> -->
+          <iconAvatar :iconurl="iconurl" @iconURL="getIconURL" />
         </el-form-item>
         <el-form-item label="第三级子项对应的链接类型，1小程序，2H5" prop="type">
           <el-select v-model="form.type" placeholder="请选择第三级子项对应的链接类型，1小程序，2H5">
@@ -236,10 +176,11 @@
 
 <script>
 import { listLv3list, getLv3list, delLv3list, addLv3list, updateLv3list, exportLv3list } from "@/api/system/lv3list";
-
+import iconAvatar from "../icon/iconAvatar";
 export default {
   name: "Lv3list",
   components: {
+    iconAvatar
   },
   data() {
     return {
@@ -280,6 +221,7 @@ export default {
       },
       // 表单参数
       form: {},
+      iconurl: '',
       // 表单校验
       rules: {
         iconid: [
@@ -304,6 +246,9 @@ export default {
     });
   },
   methods: {
+    getIconURL(url){
+      this.form.picurl = url;
+    },
     /** 查询三级列表列表 */
     getList() {
       this.loading = true;
@@ -358,12 +303,15 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.iconurl = '';
       this.open = true;
       this.title = "添加三级列表";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.iconurl = row.picurl;
+      console.log('update', this.iconurl)
       const id = row.id || this.ids
       getLv3list(id).then(response => {
         this.form = response.data;
