@@ -127,23 +127,23 @@
     <!-- 添加或修改三级列表对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="第二级图标的id" prop="iconid">
+        <el-form-item label="二级图标id" prop="iconid">
           <el-input v-model="form.iconid" placeholder="请输入第二级图标的id" />
         </el-form-item>
-        <el-form-item label="第三极列表子项名称" prop="name">
+        <el-form-item label="第三级子项名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入第三极列表子项名称" />
         </el-form-item>
-        <el-form-item label="第三级列表子项价格" prop="price">
+        <el-form-item label="三级子项价格" prop="price">
           <el-input v-model="form.price" placeholder="请输入第三级列表子项价格" />
         </el-form-item>
-        <el-form-item label="第三级列表子项图片名称" prop="picname">
+        <el-form-item label="三级子项图片名称" prop="picname">
           <el-input v-model="form.picname" placeholder="请输入第三级列表子项图片名称" />
         </el-form-item>
-        <el-form-item label="三级列表图片url" prop="picurl">
+        <el-form-item label="三级图片url" prop="picurl">
           <!-- <el-input v-model="form.picurl" placeholder="请输入第三级列表子项图片url" /> -->
           <iconAvatar :iconurl="iconurl" @iconURL="getIconURL" />
         </el-form-item>
-        <el-form-item label="第三级子项对应的链接类型，1小程序，2H5" prop="type">
+        <el-form-item label="三级子项链接类型" prop="type">
           <el-select v-model="form.type" placeholder="请选择第三级子项对应的链接类型，1小程序，2H5">
             <el-option
               v-for="dict in typeOptions"
@@ -153,16 +153,13 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="子项对应小程序id，当为小程序时启用" prop="appid">
+        <el-form-item label="子项对应小程序id" prop="appid">
           <el-input v-model="form.appid" placeholder="请输入子项对应小程序id，当为小程序时启用" />
         </el-form-item>
-        <el-form-item label="子项对应链接名称，可以为小程序名称或H5网站名称" prop="linkname">
-          <el-input v-model="form.linkname" placeholder="请输入子项对应链接名称，可以为小程序名称或H5网站名称" />
-        </el-form-item>
-        <el-form-item label="子项对应h5的地址，当为h5类型时启用" prop="h5url">
+        <el-form-item label="子项链接" prop="h5url">
           <el-input v-model="form.h5url" placeholder="请输入子项对应h5的地址，当为h5类型时启用" />
         </el-form-item>
-        <el-form-item label="标签，逗号分隔，方便用户维护数据" prop="tags">
+        <el-form-item label="标签" prop="tags">
           <el-input v-model="form.tags" placeholder="请输入标签，逗号分隔，方便用户维护数据" />
         </el-form-item>
       </el-form>

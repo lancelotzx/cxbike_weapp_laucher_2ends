@@ -99,8 +99,8 @@ description: 图标管理页面
 
     <el-table v-loading="loading" :data="iconList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="图标id,由于排序需要，使用自增id" align="center" prop="iconid" />
-      <el-table-column label="景区id，使用uuid" align="center" prop="scenicid" />
+      <el-table-column label="图标id" align="center" prop="iconid" />
+      <el-table-column label="景区id" align="center" prop="scenicid" />
       <el-table-column label="图标名称" align="center" prop="iconname" />
       <el-table-column label="图标预览" align="center" prop="iconurl" >
         <template slot-scope="scope">
@@ -108,11 +108,9 @@ description: 图标管理页面
               <iconAvatar :iconurl="scope.row.iconurl"  /> <!--这里把row都给到组件去-->
             </template> <!--这里把row都给到组件去-->
       </el-table-column>
-      <el-table-column label="链接类型，可能为小程序，h5， 列表" align="center" prop="type" :formatter="typeFormat" />
-      <el-table-column label="备注" align="center" prop="tags" />
-      <el-table-column label="图标对应小程序id，当为小程序时启用" align="center" prop="appid" />
-      <el-table-column label="图标对应H5网址链接名称，或小程序名称" align="center" prop="linkname" />
-      <el-table-column label="图标对应h5的地址，当为h5类型时启用" align="center" prop="h5url" />
+      <el-table-column label="链接类型" align="center" prop="type" :formatter="typeFormat" />
+      <el-table-column label="对应小程序id" align="center" prop="appid" />
+      <el-table-column label="链接地址" align="center" prop="h5url" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -171,19 +169,13 @@ description: 图标管理页面
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注" prop="tags">
-          <el-input v-model="form.tags" placeholder="请输入备注" />
-        </el-form-item>
         <el-form-item label="图标对应小程序id" prop="appid">
           <el-input v-model="form.appid" placeholder="请输入图标对应小程序id，当为小程序时启用" />
         </el-form-item>
-        <el-form-item label="图标对应链接名称、小程序名称" prop="linkname">
-          <el-input v-model="form.linkname" placeholder="请输入图标对应H5网址链接名称，或小程序名称" />
-        </el-form-item>
-        <el-form-item label="图标对应h5或小程序的地址" prop="h5url">
+        <el-form-item label="图标对应h5或小程序链接" prop="h5url">
           <el-input v-model="form.h5url" placeholder="请输入图标对应h5的地址，当为h5类型时启用" />
         </el-form-item>
-        <el-divider content-position="center">$三级菜单信息</el-divider>
+        <el-divider content-position="center">三级菜单信息</el-divider>
         <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
             <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddSysLv3list">添加</el-button>

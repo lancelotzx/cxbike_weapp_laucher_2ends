@@ -159,7 +159,7 @@ export default {
   top: 0;
   bottom: 0;
   color: #eee;
-  background: rgba(0, 0, 0, 0);
+  background: rgba(0,0,0,0.5);
   font-size: 24px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
