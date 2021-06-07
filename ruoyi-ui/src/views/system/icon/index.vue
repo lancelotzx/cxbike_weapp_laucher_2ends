@@ -102,12 +102,11 @@ description: 图标管理页面
       <el-table-column label="图标id" align="center" prop="iconid" />
       <el-table-column label="景区id" align="center" prop="scenicid" />
       <el-table-column label="图标名称" align="center" prop="iconname" />
-      <el-table-column label="图标预览" align="center" prop="iconurl" >
-        <template slot-scope="scope">
-              <!-- <el-input v-model="scope.row.iconurl" placeholder="请输入图标图片链接地址" /> -->
-              <iconAvatar :iconurl="scope.row.iconurl"  /> <!--这里把row都给到组件去-->
-            </template> <!--这里把row都给到组件去-->
-      </el-table-column>
+      <!-- <el-table-column label="图标预览" align="center" prop="iconurl" >
+        <template slot-scope="scope">            
+              <iconAvatar :iconurl="scope.row.iconurl"  /> 
+            </template> 
+      </el-table-column> -->
       <el-table-column label="链接类型" align="center" prop="type" :formatter="typeFormat" />
       <el-table-column label="对应小程序id" align="center" prop="appid" />
       <el-table-column label="链接地址" align="center" prop="h5url" />

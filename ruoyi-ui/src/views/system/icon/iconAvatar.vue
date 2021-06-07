@@ -11,6 +11,7 @@
           <vue-cropper
             ref="cropper"
             :img="options.img"
+            :outputType="options.outputType"
             :info="true"
             :autoCrop="options.autoCrop"
             :autoCropWidth="options.autoCropWidth"
@@ -63,6 +64,7 @@ export default {
       title: "图标上传",
       options: {
         img: this.iconurl, //裁剪图片的地址
+        outputType: 'png',
         autoCrop: false, // 是否默认生成截图框
         autoCropWidth: 64, // 默认生成截图框宽度
         autoCropHeight: 64, // 默认生成截图框高度
@@ -159,7 +161,7 @@ export default {
   top: 0;
   bottom: 0;
   color: #eee;
-  background: rgba(0,0,0,0.5);
+  background: rgba(255, 255, 255, 0.5);
   font-size: 24px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;

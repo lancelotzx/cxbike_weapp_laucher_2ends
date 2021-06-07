@@ -149,12 +149,11 @@
               <el-input v-model="scope.row.iconname" placeholder="请输入图标名称" />
             </template>
           </el-table-column>
-          <el-table-column label="图标预览" prop="iconurl">
+          <!-- <el-table-column label="图标预览" prop="iconurl">
             <template slot-scope="scope">
-              <!-- <el-input v-model="scope.row.iconurl" placeholder="请输入图标图片链接地址" /> -->
-              <iconAvatar :iconurl="scope.row.iconurl"  /> <!--这里把row都给到组件去-->
+              <iconAvatar :iconurl="scope.row.iconurl"  /> 
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="链接类型，可能为小程序，h5， 列表" prop="type">
             <template slot-scope="scope">
               <!-- <el-input v-model="scope.row.type" placeholder="请输入链接类型，可能为小程序，h5， 列表" />
