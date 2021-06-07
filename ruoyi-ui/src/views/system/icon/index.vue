@@ -105,7 +105,7 @@ description: 图标管理页面
       <el-table-column label="图标预览" align="center" prop="iconurl" >
         <template slot-scope="scope">
               <!-- <el-input v-model="scope.row.iconurl" placeholder="请输入图标图片链接地址" /> -->
-              <iconAvatar :resourceObj="scope.row"  /> <!--这里把row都给到组件去-->
+              <iconAvatar :iconurl="scope.row.iconurl"  /> <!--这里把row都给到组件去-->
             </template> <!--这里把row都给到组件去-->
       </el-table-column>
       <el-table-column label="链接类型，可能为小程序，h5， 列表" align="center" prop="type" :formatter="typeFormat" />
@@ -142,7 +142,7 @@ description: 图标管理页面
     />
 
     <!-- 添加或修改图标对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open"  width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="景区" prop="scenicid">
           <el-select v-model="form.scenicid" placeholder="请选择景区">
@@ -158,7 +158,8 @@ description: 图标管理页面
           <el-input v-model="form.iconname" placeholder="请输入图标名称" />
         </el-form-item>
         <el-form-item label="图标图片" prop="iconurl">
-          <el-input v-model="form.iconurl" placeholder="请输入图标图片链接地址" />
+          <!-- <el-input v-model="form.iconurl" placeholder="请输入图标图片链接地址" /> -->
+          <iconAvatar :iconurl="iconurl" @iconURL="getIconURL" />
         </el-form-item>
         <el-form-item label="链接类型" prop="type">
           <el-select v-model="form.type" placeholder="请选择链接类型">
@@ -308,6 +309,8 @@ export default {
       },
       // 表单参数
       form: {},
+      // avatar控件临时数据
+      iconurl: '',
       // 表单校验
       rules: {
         scenicid: [
@@ -330,6 +333,9 @@ export default {
     });
   },
   methods: {
+    getIconURL(url){
+      this.form.iconurl = url;
+    },
     /** 查询景区全部列表*/
     /** 查询景区列表 */
     getSpotList() {
@@ -394,12 +400,16 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.iconurl = '';
       this.open = true;
       this.title = "添加图标";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      
+      this.iconurl = row.iconurl;
+      console.log('update', this.iconurl)
       const iconid = row.iconid || this.ids
       getIcon(iconid).then(response => {
         this.form = response.data;

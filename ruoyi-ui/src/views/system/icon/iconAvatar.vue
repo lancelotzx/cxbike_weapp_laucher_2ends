@@ -52,11 +52,7 @@ import { uploadIcon } from "@/api/system/icon";
 
 export default {
   components: { VueCropper },
-  props: {
-    resourceObj: {
-      type: Object
-    }
-  },
+  props: ["iconurl"],
   data() {
     return {
       // 是否显示弹出层
@@ -66,7 +62,7 @@ export default {
       // 弹出层标题
       title: "图标上传",
       options: {
-        img: this.resourceObj.iconurl, //裁剪图片的地址
+        img: this.iconurl, //裁剪图片的地址
         autoCrop: true, // 是否默认生成截图框
         autoCropWidth: 200, // 默认生成截图框宽度
         autoCropHeight: 200, // 默认生成截图框高度
@@ -74,6 +70,15 @@ export default {
       },
       previews: {}
     };
+  },
+  watch: {
+    iconurl: {
+      handler(newVal, oldVal) {
+       // console.log('value change', newVal) 
+      this.options.img = newVal
+      },
+      deep: true
+    }
   },
   methods: {
     // 编辑头像
@@ -122,6 +127,7 @@ export default {
           this.options.img = process.env.VUE_APP_BASE_API + response.imgUrl;
          // store.commit('SET_AVATAR', this.options.img);
           this.msgSuccess("修改成功");
+          this.$emit('iconURL',  response.url);
           this.visible = false;
         });
       });
