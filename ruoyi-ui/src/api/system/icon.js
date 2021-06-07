@@ -56,7 +56,7 @@ export function exportIcon(query) {
 // 2级icon上传
 export function uploadIcon(data) {
   return request({
-    url: '/system/icon/upload',
+    url: '/common/upload',
     method: 'post',
     data: data
   })
