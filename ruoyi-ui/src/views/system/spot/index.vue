@@ -77,7 +77,7 @@
       <el-table-column label="景区id" align="center" prop="scenicid" />
       <el-table-column label="景区名称" align="center" prop="name" />
       <el-table-column label="景区状态" align="center" prop="status" :formatter="statusFormat" />
-      <el-table-column label="图标顺序，半角逗号分隔" align="center" prop="iconserial" />
+      <!-- <el-table-column label="图标顺序" align="center" prop="iconserial" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -124,89 +124,62 @@
             >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="图标顺序" prop="iconserial">
-          <el-input v-model="form.iconserial" placeholder="请输入图标顺序，半角逗号分隔" />
+        <el-form-item label="图标" prop="iconserial" v-if="modFlag">
+          <!-- <el-input v-model="form.iconserial" placeholder="请输入图标顺序，半角逗号分隔" /> -->
+          <el-button @click="drawer = true" type="primary" style="margin-left: 16px;">
+  可拖动图标排序
+        </el-button>
         </el-form-item>
-        <el-divider content-position="center">图标信息</el-divider>
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddSysIcon">添加</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDeleteSysIcon">删除</el-button>
-          </el-col>
-        </el-row>
-        <el-table :data="sysIconList" :row-class-name="rowSysIconIndex" @selection-change="handleSysIconSelectionChange" ref="sysIcon">
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="序号" align="center" prop="index" width="50"/>
-          <el-table-column label="景区id" prop="scenicid" v-if="false">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.scenicid" placeholder="请输入景区id，使用uuid" />
-            </template>
-          </el-table-column>
-          <el-table-column label="图标名称" prop="iconname">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.iconname" placeholder="请输入图标名称" />
-            </template>
-          </el-table-column>
-          <!-- <el-table-column label="图标预览" prop="iconurl">
-            <template slot-scope="scope">
-              <iconAvatar :iconurl="scope.row.iconurl"  /> 
-            </template>
-          </el-table-column> -->
-          <el-table-column label="链接类型，可能为小程序，h5， 列表" prop="type">
-            <template slot-scope="scope">
-              <!-- <el-input v-model="scope.row.type" placeholder="请输入链接类型，可能为小程序，h5， 列表" />
-             -->
-            <el-select v-model="scope.row.type" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column label="标签，逗号分隔，方便用户维护数据" prop="tags">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.tags" placeholder="请输入标签，逗号分隔，方便用户维护数据" />
-            </template>
-          </el-table-column>
-          <el-table-column label="图标对应小程序id，当为小程序时启用" prop="appid">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.appid" placeholder="请输入图标对应小程序id，当为小程序时启用" />
-            </template>
-          </el-table-column>
-          <el-table-column label="图标对应H5网址链接名称，或小程序名称" prop="linkname">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.linkname" placeholder="请输入图标对应H5网址链接名称，或小程序名称" />
-            </template>
-          </el-table-column>
-          <el-table-column label="图标对应h5的地址，当为h5类型时启用" prop="h5url">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.h5url" placeholder="请输入图标对应h5的地址，当为h5类型时启用" />
-            </template>
-          </el-table-column>
-        </el-table>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!--开始单个景区对应的图标展示，首先需要在open的时候获取景区全部图标-->
+    <el-drawer
+      title=""
+      :visible.sync="drawer"
+      :with-header="false">
+
+ <table class="dataTabble">
+ <thead>
+ <tr>
+  <th width="110">图标预览</th>
+  <th width="200">图标名称</th>
+  <th width="160">图标类型</th>
+ </tr>
+ </thead>
+ <draggable v-model="sysIconList" element="tbody" :move="getdata" @update="datadragEnd">
+ <tr v-for="(item,iconid) in sysIconList" :key="iconid">
+  <td align="center"><el-avatar shape="square" :size="50" fit="fill" :src="item.iconurl"></el-avatar></td>
+  <td align="center">{{item.iconname}}</td>
+  <td align="center">
+    <template v-if="item.type=='1'">小程序</template>
+    <template v-if="item.type=='2'">H5链接</template>
+    <template v-if="item.type=='3'">三级列表</template>
+  </td>
+ </tr>
+ </draggable>
+</table>
+<div class="zhu mt40">提示：拖动可对栏目进行排序，拖动完成后切换到上层对话框确认提交修改。</div> 
+    </el-drawer>
   </div>
 </template>
 
 <script>
 import { listSpot, getSpot, delSpot, addSpot, updateSpot, exportSpot } from "@/api/system/spot";
 import iconAvatar from "../icon/iconAvatar";
+import draggable from "vuedraggable";
 
 export default {
   name: "Spot",
-  components: { iconAvatar },
+  components: { iconAvatar, draggable },
   data() {
     return {
+      drawer: false,
       // icon的类型option
       options: [{
           value: '1',
@@ -278,6 +251,41 @@ export default {
     });
   },
   methods: {
+  getdata(evt) {
+   // console.log(evt.draggedContext.element.id);
+  },
+  datadragEnd(evt) {
+    console.log("拖动前的索引 :" + evt.oldIndex);
+    console.log("拖动后的索引 :" + evt.newIndex);
+    // 在这里对form进行处理
+    this.form.iconserial =  this.processDragSerial();
+    console.log("拖动完成后的iconseial", this.form.iconserial)
+  }, 
+ // 基础方法，数组两元交换
+  swapArr(index1, index2, arr){
+    arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+    return arr;
+  },
+  
+  //返回：newserialArr: 拖动后的icon序列,切换成string
+  processDragSerial() {
+    
+    // console.log(this.sysIconList)
+   // if(this.sysIconList.length = 0 )
+     // return null;
+    //else 
+      var temp =   (this.sysIconList.map(o => {return o.iconid}))
+      var ret = ''
+      for(var i of temp){
+        ret = ret + i + ',';
+      }
+      if(ret != '') {
+        return ret.substr(0, ret.length -1);
+      }
+      return null;
+     //console.log(serialArr);
+  },
+  
     /** 查询景区列表 */
     getList() {
       this.loading = true;
@@ -325,6 +333,31 @@ export default {
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
+    // 对对象数组排序，按序号数组排序,arr是对象数组sysIconList,arr_iconserial是一个字符串
+    sortBySerial (arr, arr_iconserial) {
+      var temp = [];
+      var arr_icon = [];
+     // console.log(arr, arr_iconserial)
+      if (arr_iconserial == null)
+      {
+        //arr_iconserial = arr.map(o => {return o.iconid})
+        return arr;
+      }
+      else {
+        arr_icon = arr_iconserial.split(",").map(Number)
+        //若arr_icnoserial不为空，则按其进行arr的排序
+        for(var i of arr_icon)
+          {
+            for(var j of arr) { 
+              if(j.iconid == i) { // 找到arr中iconid和序列数组中id匹配的元
+                temp.push(j);
+                break;
+              }
+            }
+          }
+          return temp;
+      }   
+    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
@@ -343,6 +376,7 @@ export default {
         this.sysIconList = response.data.sysIconList;
         this.open = true;
         this.title = "修改景区";
+        this.sysIconList = this.sortBySerial(this.sysIconList, this.form.iconserial); //按iconSerial序列排序
       });
     },
     /** 提交按钮 */
