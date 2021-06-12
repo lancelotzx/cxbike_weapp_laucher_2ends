@@ -143,7 +143,7 @@
       title=""
       :visible.sync="drawer"
       :with-header="false">
-
+ <div style="overflow-y: auto; height: 500px;">
  <table class="dataTabble">
  <thead>
  <tr>
@@ -164,6 +164,7 @@
  </tr>
  </draggable>
 </table>
+ </div>
 <div class="zhu mt40">提示：拖动可对栏目进行排序，拖动完成后切换到上层对话框确认提交修改。</div> 
     </el-drawer>
   </div>
