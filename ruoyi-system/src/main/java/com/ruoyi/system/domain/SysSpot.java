@@ -11,6 +11,9 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 
  * @author rf
  * @date 2021-06-05
+ *
+ * wj20210612 增加三个属性logourl\level\comment用于实现
+ * 有道[https://note.youdao.com/s/Het3SozM:新增功能描述]中的功能
  */
 public class SysSpot extends BaseEntity
 {
@@ -30,6 +33,18 @@ public class SysSpot extends BaseEntity
     /** 图标顺序，半角逗号分隔 */
     @Excel(name = "图标顺序，半角逗号分隔")
     private String iconserial;
+
+    /** 景区logo图片地址 */
+    @Excel(name = "景区logo图片地址")
+    private String logourl;
+
+    /** 景区等级 */
+    @Excel(name = "景区等级")
+    private String level;
+
+    /** 备注 */
+    @Excel(name = "景区备注")
+    private String comment;
 
     /** 图标信息 */
     private List<SysIcon> sysIconList;
@@ -81,6 +96,30 @@ public class SysSpot extends BaseEntity
         this.sysIconList = sysIconList;
     }
 
+    public String getLogourl() {
+        return logourl;
+    }
+
+    public void setLogourl(String logourl) {
+        this.logourl = logourl;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -89,6 +128,9 @@ public class SysSpot extends BaseEntity
             .append("status", getStatus())
             .append("iconserial", getIconserial())
             .append("sysIconList", getSysIconList())
-            .toString();
+                .append("logourl", getLogourl())
+                .append("level", getLevel())
+                .append("comment", getComment())
+                .toString();
     }
 }
