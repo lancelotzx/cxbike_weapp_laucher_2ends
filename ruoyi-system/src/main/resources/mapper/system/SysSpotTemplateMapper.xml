@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysSpotTemplateMapper">
+    
+    <resultMap type="SysSpotTemplate" id="SysSpotTemplateResult">
+        <result property="id"    column="id"    />
+        <result property="templateName"    column="template_name"    />
+        <result property="scenicid"    column="scenicId"    />
+    </resultMap>
+
+    <sql id="selectSysSpotTemplateVo">
+        select id, template_name, scenicId from sys_spot_template
+    </sql>
+
+    <select id="selectSysSpotTemplateList" parameterType="SysSpotTemplate" resultMap="SysSpotTemplateResult">
+        <include refid="selectSysSpotTemplateVo"/>
+        <where>  
+            <if test="templateName != null  and templateName != ''"> and template_name like concat('%', #{templateName}, '%')</if>
+            <if test="scenicid != null  and scenicid != ''"> and scenicId = #{scenicid}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysSpotTemplateById" parameterType="Long" resultMap="SysSpotTemplateResult">
+        <include refid="selectSysSpotTemplateVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysSpotTemplate" parameterType="SysSpotTemplate" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_spot_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="templateName != null and templateName != ''">template_name,</if>
+            <if test="scenicid != null and scenicid != ''">scenicId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="templateName != null and templateName != ''">#{templateName},</if>
+            <if test="scenicid != null and scenicid != ''">#{scenicid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysSpotTemplate" parameterType="SysSpotTemplate">
+        update sys_spot_template
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="templateName != null and templateName != ''">template_name = #{templateName},</if>
+            <if test="scenicid != null and scenicid != ''">scenicId = #{scenicid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysSpotTemplateById" parameterType="Long">
+        delete from sys_spot_template where id = #{id}
+    </delete>
+
+    <delete id="deleteSysSpotTemplateByIds" parameterType="String">
+        delete from sys_spot_template where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
