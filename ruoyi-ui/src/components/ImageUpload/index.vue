@@ -6,7 +6,7 @@
       :on-success="handleUploadSuccess"
       :before-upload="handleBeforeUpload"
       :on-error="handleUploadError"
-      name="file"
+      name="avatarfile"
       :show-file-list="false"
       :headers="headers"
       style="display: inline-block; vertical-align: top"
@@ -17,7 +17,7 @@
         </div>
       </el-image>
       <div v-else class="image">
-        <el-image :src="value" :style="`width:150px;height:150px;`" fit="fill"/>
+        <el-image :src="value" :style="`width:180px;height:150px;`" fit="fill"/>
         <div class="mask">
           <div class="actions">
             <span title="预览" @click.stop="dialogVisible = true">
@@ -89,7 +89,7 @@ export default {
     opacity: 0;
     position: absolute;
     top: 0;
-    width: 100%;
+    width: 180px;
     background-color: rgba(0, 0, 0, 0.5);
     transition: all 0.3s;
   }

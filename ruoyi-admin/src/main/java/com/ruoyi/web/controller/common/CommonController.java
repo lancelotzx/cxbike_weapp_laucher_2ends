@@ -84,7 +84,7 @@ public class CommonController
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
             String url = serverConfig.getUrl() + fileName;
-            System.out.println(url);
+            // System.out.println(url);
 
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);

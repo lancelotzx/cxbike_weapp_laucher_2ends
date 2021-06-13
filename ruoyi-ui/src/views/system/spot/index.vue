@@ -1,3 +1,13 @@
+<!--
+20210613 wangjia
+景区增加logo图属性，upload采用已有的imageUpload组件。
+父->子传递：value：图片url
+子->父传递：emit：input：url(当删除图片时发送“”) 。通过父中@input捕获事件
+logourl：修改点击后从对应某景区获取的spot表中数据，用于已有的图片展示。
+当新建或修改景区后，upload事件需要从子组件将新图片的url传递到父组件。通过input捕获。
+当在景区对话框更新图片后，图片已经上传，若点击确定，需要将logourl提交到form.logourl
+,若点击取消，图片上传但form不提交。
+-->
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
@@ -124,10 +134,27 @@
             >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="景区等级">
+          <el-radio-group v-model="form.level">
+            <el-radio
+              v-for="dict in levelOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+            >{{dict.dictLabel}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+         <el-form-item label="景区logo">
+          <imageUpload :value ="logourl" 
+          @input = "getSig">
+
+          </imageUpload>
+        </el-form-item>
+
+
         <el-form-item label="图标" prop="iconserial" v-if="modFlag">
           <!-- <el-input v-model="form.iconserial" placeholder="请输入图标顺序，半角逗号分隔" /> -->
           <el-button @click="drawer = true" type="primary" style="margin-left: 16px;">
-  可拖动图标排序
+              可拖动图标排序
         </el-button>
         </el-form-item>
         
@@ -174,12 +201,15 @@
 import { listSpot, getSpot, delSpot, addSpot, updateSpot, exportSpot } from "@/api/system/spot";
 import iconAvatar from "../icon/iconAvatar";
 import draggable from "vuedraggable";
+import imageUpload from "../../../components/ImageUpload"
 
 export default {
   name: "Spot",
-  components: { iconAvatar, draggable },
+  components: { iconAvatar, draggable, imageUpload },
   data() {
     return {
+      //logo的地址，若存在需要通过‘景区修改’按钮展示在子组件中
+      logourl: "",
       drawer: false,
       // icon的类型option
       options: [{
@@ -222,6 +252,17 @@ export default {
       open: false,
       // 景区状态字典
       statusOptions: [],
+      // 景区等级选项
+      levelOptions: [
+        {
+          dictValue: '0',
+          dictLabel: '非5A'
+        },
+        {
+          dictValue: '1',
+          dictLabel: '5A级'
+        }
+      ],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -262,11 +303,6 @@ export default {
     this.form.iconserial =  this.processDragSerial();
     console.log("拖动完成后的iconseial", this.form.iconserial)
   }, 
- // 基础方法，数组两元交换
-  swapArr(index1, index2, arr){
-    arr[index1] = arr.splice(index2, 1, arr[index1])[0];
-    return arr;
-  },
   
   //返回：newserialArr: 拖动后的icon序列,切换成string
   processDragSerial() {
@@ -371,6 +407,7 @@ export default {
       this.reset();
       this.modFlag = true;
       this.tmp_scenicid = row.scenicid
+      this.logourl = row.logourl
       const scenicid = row.scenicid || this.ids
       getSpot(scenicid).then(response => {
         this.form = response.data;
@@ -449,6 +486,11 @@ export default {
       } else {
         this.checkedSysIcon = selection;
       }
+    },
+    getSig(data){
+      console.log('get sig')
+      this.logourl = data;
+      this.form.logourl = data;
     },
     /** 导出按钮操作 */
     handleExport() {
