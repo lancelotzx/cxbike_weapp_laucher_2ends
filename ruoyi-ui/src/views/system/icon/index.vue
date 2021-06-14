@@ -99,8 +99,8 @@ description: 图标管理页面
 
     <el-table v-loading="loading" :data="iconList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="图标id" align="center" prop="iconid" />
-      <el-table-column label="景区id" align="center" prop="scenicid" />
+      <!-- <el-table-column label="图标id" align="center" prop="iconid" /> -->
+      <el-table-column label="景区" align="center" prop="scenicid" :formatter="formatter" />
       <el-table-column label="图标名称" align="center" prop="iconname" />
       <!-- <el-table-column label="图标预览" align="center" prop="iconurl" >
         <template slot-scope="scope">            
@@ -337,6 +337,15 @@ export default {
         this.loading = false;
       });
     },
+    // 处理景区id到景区name的转换
+    formatter(row, column) {
+        for(var i of this.spotList) {
+           if(i.scenicid == row.scenicid){
+              return i.name
+           }
+        }
+        return row.scenicid
+      },
 
     /** 查询图标列表 */
     getList() {
