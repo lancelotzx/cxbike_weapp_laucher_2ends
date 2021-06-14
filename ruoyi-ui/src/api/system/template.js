@@ -26,6 +26,15 @@ export function addTemplate(data) {
   })
 }
 
+// 根据模版数据批量新增的前端接口
+export function batchAddFromOneTemplate(data) {
+  return request({
+    url: '/system/template',
+    method: 'post',
+    data: data
+  })
+}
+
 // 修改模版管理
 export function updateTemplate(data) {
   return request({

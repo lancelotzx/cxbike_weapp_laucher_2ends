@@ -1,5 +1,6 @@
 <!--
 20210614 wangjia：增加和修改景区模版时，用户选择的景区为下拉。
+20210614 wangjia: 开始进行batchadd功能，在模版item中增加。
 -->
 <template>
   <div class="app-container">
@@ -85,6 +86,13 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:template:remove']"
           >删除</el-button>
+           <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-folder-add"
+            @click="handleBatchAdd(scope.row)"
+            v-hasPermi="['system:template:remove']"
+          >数据生成</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -117,6 +125,26 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+     <!-- 生成批量数据对话框 -->
+    <el-dialog title="通过模版生成" :visible.sync="open2" width="500px" append-to-body>
+      <el-form ref="batchform" :model="batchform" :rules="batchrules" label-width="80px">
+        <el-alert
+          title="批量生成说明"
+          type="success"
+          description="批量生成数据完全复制模版数据，请记下当前输入的新景区名称，用于在景区、图标
+          模块中查询当前生成的数据。景区名称不可重复。">
+        </el-alert>
+        
+        <el-form-item label="景区名称" prop="newspotname">
+          <el-input v-model="batchform.newspotname" placeholder="请输入新建景区名称" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitBatchForm">确 定</el-button>
+        <el-button @click="cancelBatch">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -152,6 +180,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      open2: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -161,6 +190,8 @@ export default {
       },
       // 表单参数
       form: {},
+      // 批量生成景区数据的form
+      batchform: {},
       // 表单校验
       rules: {
         templateName: [
@@ -168,6 +199,11 @@ export default {
         ],
         scenicid: [
           { required: true, message: "外键对应景区spot表的主键id不能为空", trigger: "blur" }
+        ]
+      },
+      batchrules: {
+        newspotname: [
+          { required: true, message: "景区名称不能为空", trigger: "blur" }
         ]
       }
     };
@@ -271,6 +307,23 @@ export default {
         }
       });
     },
+    submitBatchForm(){
+      console.log('sumbit me batch~')
+      this.$refs["batchform"].validate(valid => {
+        if (valid) {
+           console.log('com on')
+           console.log(this.batchform)
+           this.open2 = false
+        }
+      });
+    },
+    cancelBatch()  {
+      this.open2 = false;
+      this.batchform = {
+        newspotname: null
+      };
+      this.resetForm("batchform");
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
@@ -284,6 +337,11 @@ export default {
           this.getList();
           this.msgSuccess("删除成功");
         })
+    },
+    handleBatchAdd(row){
+      console.log('batch add')
+      this.open2 = true
+      this.batchform.orispotid = row.scenicid
     },
     /** 导出按钮操作 */
     handleExport() {
