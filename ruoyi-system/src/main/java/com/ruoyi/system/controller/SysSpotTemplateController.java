@@ -14,6 +14,8 @@ import com.ruoyi.system.mapper.SysSpotMapper;
 import com.ruoyi.system.service.ISysIconService;
 import com.ruoyi.system.service.ISysLv3listService;
 import com.ruoyi.system.service.ISysSpotService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +44,7 @@ import javax.validation.constraints.Null;
  * @author RF
  * @date 2021-06-13
  */
+@Api("模版管理")
 @RestController
 @RequestMapping("/system/template")
 public class SysSpotTemplateController extends BaseController
@@ -70,6 +73,7 @@ public class SysSpotTemplateController extends BaseController
     /**
      * 查询模版管理列表
      */
+    @ApiOperation("查询模版列表")
     @PreAuthorize("@ss.hasPermi('system:template:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysSpotTemplate sysSpotTemplate)
@@ -82,6 +86,7 @@ public class SysSpotTemplateController extends BaseController
     /**
      * 导出模版管理列表
      */
+    @ApiOperation("导出模版列表")
     @PreAuthorize("@ss.hasPermi('system:template:export')")
     @Log(title = "模版管理", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
@@ -95,6 +100,7 @@ public class SysSpotTemplateController extends BaseController
     /**
      * 获取模版管理详细信息
      */
+    @ApiOperation("获取模版详细信息")
     @PreAuthorize("@ss.hasPermi('system:template:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
@@ -105,6 +111,7 @@ public class SysSpotTemplateController extends BaseController
     /**
      * 新增模版管理
      */
+    @ApiOperation("新增模版管理")
     @PreAuthorize("@ss.hasPermi('system:template:add')")
     @Log(title = "模版管理", businessType = BusinessType.INSERT)
     @PostMapping
@@ -123,6 +130,7 @@ public class SysSpotTemplateController extends BaseController
     /**
      * 通过模版增加数据管理
      */
+    @ApiOperation("通过模版生成数据，参数为新景区名称和模版内景区id")
     @PreAuthorize("@ss.hasPermi('system:template:add')")
     @Log(title = "模版生成数据", businessType = BusinessType.INSERT)
     @PostMapping("/batch")
@@ -213,6 +221,7 @@ public class SysSpotTemplateController extends BaseController
     /**
      * 修改模版管理
      */
+    @ApiOperation("修改模版数据")
     @PreAuthorize("@ss.hasPermi('system:template:edit')")
     @Log(title = "模版管理", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -231,6 +240,7 @@ public class SysSpotTemplateController extends BaseController
     /**
      * 删除模版管理
      */
+    @ApiOperation("删除模版数据")
     @PreAuthorize("@ss.hasPermi('system:template:remove')")
     @Log(title = "模版管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")

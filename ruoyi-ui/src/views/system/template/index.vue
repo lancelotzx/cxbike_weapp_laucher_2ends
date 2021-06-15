@@ -311,7 +311,7 @@ export default {
       this.$refs["batchform"].validate(valid => {
         if (valid) {
            console.log(this.batchform)
-           //提交的form的参数有：templateName：新建景区名称 orispotid：旧景区id
+           //提交的form的参数有：templateName：新建景区名称 sceincid：旧景区id
            batchAddFromOneTemplate(this.batchform).then(
              response => {
               this.msgSuccess("批量新增成功");

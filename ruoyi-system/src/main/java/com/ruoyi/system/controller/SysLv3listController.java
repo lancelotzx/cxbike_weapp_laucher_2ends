@@ -1,6 +1,9 @@
 package com.ruoyi.system.controller;
 
 import java.util.List;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author ruoyi
  * @date 2021-06-05
  */
+@Api("三级列表管理")
 @RestController
 @RequestMapping("/system/lv3list")
 public class SysLv3listController extends BaseController
@@ -36,6 +40,7 @@ public class SysLv3listController extends BaseController
     /**
      * 查询三级列表列表
      */
+    @ApiOperation("查询三级列表")
     @PreAuthorize("@ss.hasPermi('system:lv3list:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysLv3list sysLv3list)
@@ -48,6 +53,7 @@ public class SysLv3listController extends BaseController
     /**
      * 导出三级列表列表
      */
+    @ApiOperation("导出三级列表数据")
     @PreAuthorize("@ss.hasPermi('system:lv3list:export')")
     @Log(title = "三级列表", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
@@ -61,6 +67,7 @@ public class SysLv3listController extends BaseController
     /**
      * 获取三级列表详细信息
      */
+    @ApiOperation("获取某id的三级列表详细信息")
     @PreAuthorize("@ss.hasPermi('system:lv3list:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
@@ -71,6 +78,7 @@ public class SysLv3listController extends BaseController
     /**
      * 新增三级列表
      */
+    @ApiOperation("新增三级列表")
     @PreAuthorize("@ss.hasPermi('system:lv3list:add')")
     @Log(title = "三级列表", businessType = BusinessType.INSERT)
     @PostMapping
@@ -82,6 +90,7 @@ public class SysLv3listController extends BaseController
     /**
      * 修改三级列表
      */
+    @ApiOperation("修改三级列表")
     @PreAuthorize("@ss.hasPermi('system:lv3list:edit')")
     @Log(title = "三级列表", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -93,6 +102,7 @@ public class SysLv3listController extends BaseController
     /**
      * 删除三级列表
      */
+    @ApiOperation("删除三级列表数据")
     @PreAuthorize("@ss.hasPermi('system:lv3list:remove')")
     @Log(title = "三级列表", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
