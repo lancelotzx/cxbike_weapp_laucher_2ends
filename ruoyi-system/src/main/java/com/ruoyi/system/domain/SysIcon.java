@@ -59,6 +59,11 @@ public class SysIcon extends BaseEntity
         this.iconid = iconid;
     }
 
+    public void cleanIconid()
+    {
+        this.iconid = null;
+    }
+
     public Long getIconid() 
     {
         return iconid;

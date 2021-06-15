@@ -82,6 +82,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="linkname != null">#{linkname},</if>
             <if test="h5url != null">#{h5url},</if>
          </trim>
+        <selectKey keyProperty="iconid" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
 
     <update id="updateSysIcon" parameterType="SysIcon">

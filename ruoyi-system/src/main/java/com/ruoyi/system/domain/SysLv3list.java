@@ -159,6 +159,8 @@ public class SysLv3list extends BaseEntity
         return tags;
     }
 
+    public void cleanid() {this.id = null; }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
