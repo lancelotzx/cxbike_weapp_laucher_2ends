@@ -138,8 +138,8 @@
           模块中查询当前生成的数据。景区名称不可重复。">
         </el-alert>
         
-        <el-form-item label="景区名称" prop="newspotname">
-          <el-input v-model="batchform.newspotname" placeholder="请输入新建景区名称" />
+        <el-form-item label="景区名称" prop="templateName">
+          <el-input v-model="batchform.templateName" placeholder="请输入新建景区名称" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -151,7 +151,7 @@
 </template>
 
 <script>
-import { listTemplate, getTemplate, delTemplate, addTemplate, updateTemplate, exportTemplate } from "@/api/system/template";
+import { listTemplate, getTemplate, delTemplate, addTemplate, updateTemplate, exportTemplate, batchAddFromOneTemplate } from "@/api/system/template";
 import { listSpot } from "@/api/system/spot";
 
 export default {
@@ -202,7 +202,7 @@ export default {
         ]
       },
       batchrules: {
-        newspotname: [
+        templateName: [
           { required: true, message: "景区名称不能为空", trigger: "blur" }
         ]
       }
@@ -308,11 +308,16 @@ export default {
       });
     },
     submitBatchForm(){
-      console.log('sumbit me batch~')
       this.$refs["batchform"].validate(valid => {
         if (valid) {
-           console.log('com on')
            console.log(this.batchform)
+           //提交的form的参数有：templateName：新建景区名称 orispotid：旧景区id
+           batchAddFromOneTemplate(this.batchform).then(
+             response => {
+              this.msgSuccess("批量新增成功");
+              this.open2 = false;
+              this.getList();
+            });
            this.open2 = false
         }
       });
@@ -320,7 +325,7 @@ export default {
     cancelBatch()  {
       this.open2 = false;
       this.batchform = {
-        newspotname: null
+        templateName: null
       };
       this.resetForm("batchform");
     },
@@ -340,8 +345,10 @@ export default {
     },
     handleBatchAdd(row){
       console.log('batch add')
+      this.batchform = {}
+      this.resetForm("batchform");
       this.open2 = true
-      this.batchform.orispotid = row.scenicid
+      this.batchform.scenicid = row.scenicid
     },
     /** 导出按钮操作 */
     handleExport() {

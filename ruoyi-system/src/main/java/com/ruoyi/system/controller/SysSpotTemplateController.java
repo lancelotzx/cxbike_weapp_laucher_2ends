@@ -87,6 +87,21 @@ public class SysSpotTemplateController extends BaseController
     }
 
     /**
+     * 通过模版增加数据管理
+     */
+    @PreAuthorize("@ss.hasPermi('system:template:add')")
+    @Log(title = "模版生成数据", businessType = BusinessType.INSERT)
+    @PostMapping("/batch")
+    public AjaxResult add2(@RequestBody SysSpotTemplate sysSpotTemplate)
+    {
+        // return toAjax(sysSpotTemplateService.insertSysSpotTemplate(sysSpotTemplate));
+        int row = 0;
+        System.out.println(sysSpotTemplate.getScenicid() + ',' + sysSpotTemplate.getTemplateName());
+        // 这里进行数据处理
+        return toAjax(1);
+    }
+
+    /**
      * 修改模版管理
      */
     @PreAuthorize("@ss.hasPermi('system:template:edit')")
