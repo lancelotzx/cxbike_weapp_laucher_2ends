@@ -5,9 +5,7 @@ import java.util.List;
 
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
-import com.ruoyi.system.domain.SysIcon;
-import com.ruoyi.system.domain.SysLv3list;
-import com.ruoyi.system.domain.SysSpot;
+import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.SysIconMapper;
 import com.ruoyi.system.mapper.SysLv3listMapper;
 import com.ruoyi.system.mapper.SysSpotMapper;
@@ -30,7 +28,6 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.SysSpotTemplate;
 import com.ruoyi.system.service.ISysSpotTemplateService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -134,28 +131,33 @@ public class SysSpotTemplateController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:template:add')")
     @Log(title = "模版生成数据", businessType = BusinessType.INSERT)
     @PostMapping("/batch")
-    public AjaxResult add2(@RequestBody SysSpotTemplate sysSpotTemplate)
+    public AjaxResult add2(@RequestBody SysSpotGen sysSpotGen)
     {
         boolean ret;
         int row = 0;
-        System.out.println(sysSpotTemplate.getScenicid() + ',' + sysSpotTemplate.getTemplateName());
+        System.out.println(sysSpotGen.getScenicid() + ',' + sysSpotGen.getNewSpotName() + ',' +
+                sysSpotGen.getNewSenicId());
         // 这里进行数据处理
-
-        ret = buildMultiDataFromTemplate(sysSpotTemplate.getScenicid(), sysSpotTemplate.getTemplateName());
+        ret = buildMultiDataFromTemplate(sysSpotGen.getScenicid(), sysSpotGen.getNewSpotName(),
+                sysSpotGen.getNewSenicId());
         if(ret == true)
             return toAjax(1);
         else
             return toAjax(0);
     }
 
-    // 批量生成数据的业务处理
+    // 批量生成数据的业务处理,
+    // 参数1：旧景区id，参数2：新景区名称，录入；参数3：新景区id，录入
     //Step1.先获取old景区的数据并插入到sys_spot表
     //Step2.再获取old景区的icon数据并插入到sys_icon表
-    boolean buildMultiDataFromTemplate(String oldScenicId,String newSpotName){
+    boolean buildMultiDataFromTemplate(String oldScenicId,
+                                       String newSpotName,
+                                       String newScenicId
+                                       ){
 
         //Step1 Start 景区级别的复制
         SysSpot sysSpotNew =  sysSpotService.selectSysSpotById(oldScenicId);
-        String newScenicId = sysSpotNew.getScenicid() + '_' + IdUtils.simpleUUID();
+        // String newScenicId = sysSpotNew.getScenicid() + '_' + IdUtils.simpleUUID();
         sysSpotNew.setScenicid(newScenicId);
         sysSpotNew.setName(newSpotName);
         int row = 0;
@@ -172,6 +174,7 @@ public class SysSpotTemplateController extends BaseController
             return false;
         }
     }
+    //Step2 中复制的实现，其中也包括Step3级别的实现
     //从oldSpotId对应的spot中获取icons并填充到icon表中，icon的scenicid为newSpotId
     //注意，必须要新增到icon表中，id是自增的，不能指定。
     //注意，此处需要通过mybatis的feature获取到刚刚新增的iconid
@@ -192,6 +195,7 @@ public class SysSpotTemplateController extends BaseController
                 //通过mybatis的feature获取到最后insert的自增iconid，用于后续lv3的新增
                 Long iconid = sysIcon.getIconid();
                 //System.out.println(iconid);
+                // Step3.lv3级别的复制，在lv2级别内实现
                 insertNewSysLv3(oldiconid, iconid);
             }
         }

@@ -129,17 +129,20 @@
     </el-dialog>
 
      <!-- 生成批量数据对话框 -->
-    <el-dialog title="通过模版生成" :visible.sync="open2" width="500px" append-to-body>
+    <el-dialog title="通过模版生成" :visible.sync="open2" width="600px" append-to-body>
       <el-form ref="batchform" :model="batchform" :rules="batchrules" label-width="80px">
         <el-alert
           title="批量生成说明"
           type="success"
-          description="批量生成数据完全复制模版数据，请记下当前输入的新景区名称，用于在景区、图标
-          模块中查询当前生成的数据。景区名称不可重复。">
+          description="批量生成数据完全复制模版数据，请记下当前输入的新景区名称和id，用于在景区、图标
+          模块中查询当前生成的数据。景区名称和景区id不可与已有的景区重复。">
         </el-alert>
         
-        <el-form-item label="景区名称" prop="templateName">
-          <el-input v-model="batchform.templateName" placeholder="请输入新建景区名称" />
+        <el-form-item label="新景区名称" prop="newSpotName">
+          <el-input v-model="batchform.newSpotName" placeholder="请输入新景区名称" />
+        </el-form-item>
+        <el-form-item label="新景区id" prop="newSenicId">
+          <el-input v-model="batchform.newSenicId" placeholder="请输入新景区id" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -202,9 +205,13 @@ export default {
         ]
       },
       batchrules: {
-        templateName: [
+        newSpotName: [
           { required: true, message: "景区名称不能为空", trigger: "blur" }
+        ],
+         newSenicId: [
+          { required: true, message: "景区id不能为空", trigger: "blur" }
         ]
+
       }
     };
   },
@@ -311,7 +318,7 @@ export default {
       this.$refs["batchform"].validate(valid => {
         if (valid) {
            console.log(this.batchform)
-           //提交的form的参数有：templateName：新建景区名称 sceincid：旧景区id
+           //提交的form的参数有：newSpotName：新建景区名称 sceincid：旧景区id newSenicId 新景区id
            batchAddFromOneTemplate(this.batchform).then(
              response => {
               this.msgSuccess("批量新增成功");
@@ -325,7 +332,8 @@ export default {
     cancelBatch()  {
       this.open2 = false;
       this.batchform = {
-        templateName: null
+        newSpotName: null,
+        newSenicId: null
       };
       this.resetForm("batchform");
     },
