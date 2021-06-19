@@ -1,6 +1,7 @@
 package com.ruoyi.system.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.ruoyi.common.utils.StringUtils;
@@ -158,31 +159,73 @@ public class SysSpotTemplateController extends BaseController
         //Step1 Start 景区级别的复制
         SysSpot sysSpotNew =  sysSpotService.selectSysSpotById(oldScenicId);
         // String newScenicId = sysSpotNew.getScenicid() + '_' + IdUtils.simpleUUID();
+        //下面sysSpotNew中的iconserial是oldspot中的，是无效的，需要在icon级别插入后更新new数据。
         sysSpotNew.setScenicid(newScenicId);
         sysSpotNew.setName(newSpotName);
         int row = 0;
+        String newiconserial ;
+        HashMap<Long, String> map ;
+        String oldiconserial = sysSpotNew.getIconserial();
+        //newiconserial = getNewSerialIconString(oldiconserial);
         try {
-            System.out.println("here");
-            //Step1 Over
-            //sysSpotService.insertSysSpot(sysSpotNew);
-            sysSpotMapper.insertSysSpot(sysSpotNew);
             //Step2
-            insertNewSysIcon(oldScenicId, newScenicId);
+            map = insertNewSysIcon(oldScenicId, newScenicId);
+            newiconserial = getNewSerialIconString(oldiconserial, map);
+            sysSpotNew.setIconserial(newiconserial);
+            sysSpotMapper.insertSysSpot(sysSpotNew);
 
             return true;
         }catch (Exception e){
             return false;
         }
     }
+
+    // TODO
+    //传递一个模版中spot的字符串，得到当前生成的最后一次克隆数据的新字符串
+    //参数1 oldSerialIconString 模版景区的原有顺序编号
+    //参数2 通过lv2 拷贝得到的新插入到icon表中的map
+    //return : 通过排序后的新的iconserial排序字符串，用于写入到spot表中的对应数据
+    public String getNewSerialIconString(
+            String oldSerialIconString,
+            HashMap<Long, String> map
+            )
+    {
+        StringBuffer sb = new StringBuffer();
+       // List<String> oldIconNameList = new ArrayList<String>();
+        for(String s : oldSerialIconString.split(",")){
+            //通过iconid在icon表中找到中文名称
+            Long temp_id = Long.valueOf(s);
+            SysIcon icon = sysIconMapper.selectSysIconById(temp_id);
+            for(Long id: map.keySet()){
+                if(icon.getIconname().equals(map.get(id))){
+                    sb.append(String.valueOf(id));
+                    sb.append(",");
+                }
+            }
+        }
+        // 通过nameList再去给刚插入icon表的icon进行排序，得到新的Serial
+       String ret = sb.toString();
+        if(ret.length() > 0){
+            ret = ret.substring(0, ret.length() - 1);
+        }
+
+        return ret;
+    }
+
     //Step2 中复制的实现，其中也包括Step3级别的实现
     //从oldSpotId对应的spot中获取icons并填充到icon表中，icon的scenicid为newSpotId
     //注意，必须要新增到icon表中，id是自增的，不能指定。
     //注意，此处需要通过mybatis的feature获取到刚刚新增的iconid
-    public void insertNewSysIcon(String oldScenicId, String newScenicId)
+    //参数1：旧景区id 参数2：新景区id，用于写入daoicon表
+    //返回值：一个包含<newIconId, newIconName>的map
+    public HashMap<Long,String> insertNewSysIcon(
+            String oldScenicId,
+            String newScenicId)
     {
         SysSpot sysSpot = sysSpotService.selectSysSpotById(oldScenicId);
         List<SysIcon> sysIconList = sysSpot.getSysIconList();
         String scenicid = newScenicId;
+        HashMap<Long, String> map = new HashMap<Long, String>();
         if (StringUtils.isNotNull(sysIconList))
         {
             for (SysIcon sysIcon : sysIconList)
@@ -194,11 +237,13 @@ public class SysSpotTemplateController extends BaseController
                 sysIconMapper.insertSysIcon(sysIcon);
                 //通过mybatis的feature获取到最后insert的自增iconid，用于后续lv3的新增
                 Long iconid = sysIcon.getIconid();
+                map.put(iconid, sysIcon.getIconname());
                 //System.out.println(iconid);
                 // Step3.lv3级别的复制，在lv2级别内实现
                 insertNewSysLv3(oldiconid, iconid);
             }
         }
+        return map;
     }
 
     //从oldSpotId对应的spot中获取icons并填充到icon表中，由于从icon级别开始的id都是自动
