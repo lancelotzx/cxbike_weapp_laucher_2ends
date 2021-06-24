@@ -180,7 +180,6 @@ public class SysSpotTemplateController extends BaseController
         }
     }
 
-    // TODO
     //传递一个模版中spot的字符串，得到当前生成的最后一次克隆数据的新字符串
     //参数1 oldSerialIconString 模版景区的原有顺序编号
     //参数2 通过lv2 拷贝得到的新插入到icon表中的map
